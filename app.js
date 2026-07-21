@@ -54,6 +54,41 @@ const state = {
   },
 };
 
+/* ---------------- ピクセルアート ログインアイコン（ドラクエ風スライム） ---------------- */
+function renderPixelLogo(){
+  const el = document.getElementById('login-logo'); if(!el) return;
+  // 16x16 ドット絵：コック帽をかぶったスライム
+  const PIX = [
+    "................",
+    ".....oooooo.....",
+    "....oWWWWWWo....",
+    "...oWWWWWWWWo...",
+    "...oWWWWWWWWo...",
+    "...oWWWWWWWWo...",
+    "...oggggggggo...",
+    "..obbbbbbbbbbo..",
+    ".obhhbbbbbbbbbo.",
+    ".obheebbbbeebbo.",
+    ".obbepbbbbpebbo.",
+    ".obbbbbbbbbbbbo.",
+    ".obbbmbbbbmbbbo.",
+    ".obbbbmmmmbbbbo.",
+    "obbbbbbbbbbbbbbo",
+    ".oooooooooooooo.",
+  ];
+  const PAL = { o:'#0d294a', b:'#33a1ee', h:'#8fd6ff', W:'#ffffff', g:'#c9d4e4', e:'#ffffff', p:'#0d294a', m:'#0d294a' };
+  const cell=6, N=16;
+  let rects='';
+  for(let y=0;y<PIX.length;y++){
+    const row=PIX[y];
+    for(let x=0;x<row.length;x++){
+      const col=PAL[row[x]]; if(!col) continue;
+      rects+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="${col}"/>`;
+    }
+  }
+  el.innerHTML = `<svg class="pixel-sprite" viewBox="0 0 ${N*cell} ${N*cell}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
+}
+
 /* ---------------- ログイン（超簡易・あいことば方式） ---------------- */
 const PASSWORD = 'rikuto';
 function isAuthed(){ try{ return sessionStorage.getItem('cq_auth')==='1'; }catch(e){ return false; } }
@@ -773,6 +808,7 @@ function wire(){
 
 /* ================= 起動 ================= */
 async function boot(){
+  renderPixelLogo();
   try{
     await DB.init();
     const savedSettings=await DB.getMeta('settings');
