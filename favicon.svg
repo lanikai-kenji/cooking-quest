@@ -5,57 +5,63 @@
       <stop offset="0.5" stop-color="#ff2e63"/>
       <stop offset="1" stop-color="#8a1e5a"/>
     </linearGradient>
-    <radialGradient id="glow" cx="0.5" cy="0.15" r="0.9">
-      <stop offset="0" stop-color="#ffd23f" stop-opacity="0.55"/>
+    <radialGradient id="glow" cx="0.5" cy="0.12" r="0.9">
+      <stop offset="0" stop-color="#ffd23f" stop-opacity="0.5"/>
       <stop offset="0.6" stop-color="#ffd23f" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="flameOuter" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0" stop-color="#ff5a1f"/>
-      <stop offset="1" stop-color="#ffb020"/>
+    <linearGradient id="hat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e9edf5"/>
     </linearGradient>
-    <linearGradient id="flameInner" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0" stop-color="#ffd23f"/>
-      <stop offset="1" stop-color="#fff3b0"/>
-    </linearGradient>
-    <linearGradient id="pan" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#3a3f52"/>
-      <stop offset="1" stop-color="#12141d"/>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd0a6"/>
+      <stop offset="1" stop-color="#f4b184"/>
     </linearGradient>
   </defs>
 
   <!-- 背景 -->
-  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#bg)"/>
-  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#glow)"/>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="120" fill="url(#glow)"/>
 
-  <!-- フライパン -->
+  <!-- 耳 -->
+  <circle cx="150" cy="330" r="26" fill="url(#skin)"/>
+  <circle cx="362" cy="330" r="26" fill="url(#skin)"/>
+
+  <!-- 顔 -->
+  <circle cx="256" cy="330" r="120" fill="url(#skin)"/>
+
+  <!-- シェフ帽 -->
   <g>
-    <!-- 取っ手 -->
-    <rect x="356" y="352" width="150" height="34" rx="17" transform="rotate(18 356 352)" fill="url(#pan)"/>
-    <!-- 本体 -->
-    <ellipse cx="214" cy="372" rx="150" ry="60" fill="url(#pan)"/>
-    <ellipse cx="214" cy="360" rx="150" ry="58" fill="#0d0f17"/>
-    <ellipse cx="214" cy="356" rx="128" ry="46" fill="#191c28"/>
+    <!-- ふわふわトップ -->
+    <circle cx="185" cy="150" r="58" fill="url(#hat)"/>
+    <circle cx="256" cy="120" r="70" fill="url(#hat)"/>
+    <circle cx="330" cy="150" r="58" fill="url(#hat)"/>
+    <circle cx="230" cy="175" r="52" fill="url(#hat)"/>
+    <circle cx="290" cy="175" r="52" fill="url(#hat)"/>
+    <!-- 帽子のバンド（つば） -->
+    <rect x="150" y="196" width="212" height="74" rx="24" fill="url(#hat)"/>
+    <rect x="150" y="248" width="212" height="22" rx="11" fill="#d7dce8"/>
   </g>
 
-  <!-- 炎（外） -->
-  <path fill="url(#flameOuter)" d="
-    M232 350
-    C120 320 150 220 205 168
-    C214 232 250 214 236 150
-    C300 176 336 250 316 316
-    C356 300 356 250 340 224
-    C392 268 404 356 336 396
-    C300 418 250 414 232 350 Z"/>
-  <!-- 炎（内） -->
-  <path fill="url(#flameInner)" d="
-    M244 352
-    C196 336 206 274 244 236
-    C246 288 276 276 270 232
-    C310 262 320 314 300 350
-    C300 384 272 396 244 352 Z"/>
+  <!-- まゆげ -->
+  <rect x="196" y="292" width="42" height="13" rx="6.5" fill="#5b3b26"/>
+  <rect x="274" y="292" width="42" height="13" rx="6.5" fill="#5b3b26"/>
+
+  <!-- 目 -->
+  <circle cx="217" cy="332" r="18" fill="#3a2418"/>
+  <circle cx="295" cy="332" r="18" fill="#3a2418"/>
+  <circle cx="223" cy="326" r="6" fill="#ffffff"/>
+  <circle cx="301" cy="326" r="6" fill="#ffffff"/>
+
+  <!-- ほっぺ -->
+  <circle cx="185" cy="368" r="18" fill="#ff8a8a" opacity="0.55"/>
+  <circle cx="327" cy="368" r="18" fill="#ff8a8a" opacity="0.55"/>
+
+  <!-- 口（にっこり） -->
+  <path d="M212 372 Q256 418 300 372 Q256 396 212 372 Z" fill="#8a3b1e"/>
+  <path d="M226 384 Q256 400 286 384 Q256 392 226 384 Z" fill="#ff6b6b"/>
 
   <!-- きらめき -->
-  <circle cx="372" cy="150" r="12" fill="#fff3b0"/>
-  <circle cx="410" cy="196" r="7" fill="#ffe27a"/>
-  <circle cx="120" cy="150" r="8" fill="#ffd23f"/>
+  <path d="M398 236 l7 18 18 7 -18 7 -7 18 -7 -18 -18 -7 18 -7 z" fill="#fff3b0"/>
+  <circle cx="120" cy="215" r="7" fill="#ffe27a"/>
 </svg>
