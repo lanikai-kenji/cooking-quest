@@ -795,6 +795,7 @@ document.addEventListener('DOMContentLoaded',boot);
 /* ================= 発表サイト テンプレート ================= */
 const SITE_TEMPLATE = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>__TITLE__</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:#0b1020;color:#eef2ff;overflow:hidden}
