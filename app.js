@@ -41,6 +41,17 @@ const DB = (()=>{
   };
 })();
 
+/* ---------------- ストア（クラウド優先／ローカル予備） ---------------- */
+let store = null;               // boot でクラウド or ローカルを割り当て
+const dbAdapter = {             // Supabase未設定時のフォールバック（IndexedDB）
+  allEntries:  ()=>DB.allEntries(),
+  putEntry:    (e)=>DB.putEntry(e).then(()=>e),
+  delEntry:    (id)=>DB.delEntry(id),
+  clearEntries:()=>DB.clearEntries(),
+  getSettings: ()=>DB.getMeta('settings'),
+  setSettings: (s)=>DB.setMeta('settings',s),
+};
+
 /* ---------------- 状態 ---------------- */
 const state = {
   entries: [],          // {id,day,date,title,ingredients,steps,note,stars,yum,photos:[dataURL],createdAt}
@@ -133,6 +144,7 @@ function doLogin(){
     try{ sessionStorage.setItem('cq_auth','1'); }catch(e){}
     $('#login').classList.add('hidden');
     $('#login-pass').value='';
+    afterLogin();
   }else{
     const err=$('#login-err'); err.textContent='あいことばが ちがうよ！ もう一回';
     err.classList.remove('shake'); void err.offsetWidth; err.classList.add('shake');
@@ -379,9 +391,15 @@ async function saveEntry(){
   const wasNew = !state.editingId;
   const beforeCleared = Math.min(state.entries.length, state.settings.goal);
 
-  await DB.putEntry(entry);
-  const idx=state.entries.findIndex(e=>e.id===entry.id);
-  if(idx>=0) state.entries[idx]=entry; else state.entries.push(entry);
+  const saveBtn=$('#save-entry'); const oldLabel=saveBtn.textContent;
+  saveBtn.disabled=true; saveBtn.textContent='☁️ ほぞん中…';
+  let saved;
+  try{ saved = await store.putEntry(entry); }
+  catch(err){ console.error(err); saveBtn.disabled=false; saveBtn.textContent=oldLabel;
+    toast('保存に失敗しました…ネットせつぞくを確認してね'); return; }
+  saveBtn.disabled=false; saveBtn.textContent=oldLabel;
+  const idx=state.entries.findIndex(e=>e.id===saved.id);
+  if(idx>=0) state.entries[idx]=saved; else state.entries.push(saved);
   state.entries.sort((a,b)=>a.day-b.day);
 
   SFX.save(); confetti();
@@ -585,7 +603,8 @@ function renderReport(){
   const withCover=$('#p-cover').value==='1';
   const withDocs=$('#p-docs').value==='1';
   const withQR=$('#p-qr').value==='1';
-  const qrUrl=(s.url||'').trim();
+  // クラウド接続時は「発表ページ＋ワークスペースID」を自動で飛び先に
+  const qrUrl=(store===Cloud) ? Cloud.presentUrl() : (s.url||'').trim();
   const qrImg=(withQR && qrUrl) ? makeQR(qrUrl) : null;
   const entries=[...state.entries].sort((a,b)=>a.day-b.day);
   const paperStyle=`width:${w}mm;height:${h}mm`;
@@ -677,10 +696,11 @@ async function importJSON(file){
     if(!data.entries) throw new Error('形式がちがうみたい');
     const ok=await confirmModal('データを読みこむ',`いまのデータを、読みこんだデータに置きかえます。よいですか？（${data.entries.length}日分）`);
     if(!ok) return;
-    await DB.clearEntries();
-    for(const e of data.entries) await DB.putEntry(e);
-    if(data.settings){ state.settings={...state.settings,...data.settings}; await DB.setMeta('settings',state.settings); }
-    state.entries=data.entries.slice().sort((a,b)=>a.day-b.day);
+    toast('読みこみ中…（写真アップロード）');
+    await store.clearEntries();
+    for(const e of data.entries) await store.putEntry(e);
+    if(data.settings){ state.settings={...state.settings,...data.settings}; await store.setSettings(state.settings); }
+    state.entries=(await store.allEntries()).sort((a,b)=>a.day-b.day);
     fillSettingsForm();
     toast('読みこんだよ！ ✅'); show('dash');
   }catch(e){ console.error(e); toast('読みこめませんでした…'); }
@@ -694,9 +714,10 @@ function exportSite(){
   // 関数リプレーサで $ などの特殊文字を安全に埋め込む
   const html = SITE_TEMPLATE.replace('__DATA__', ()=>dataJSON)
                             .replace(/__TITLE__/g, ()=>title);
-  // 公開用は present.html 固定名（アップロード手順に合わせるため）
-  download(`present.html`, html, 'text/html');
-  toast('発表ページ(present.html)を書き出したよ 🌐');
+  // オフライン用のバックアップ（クラウド不要で開ける自己完結HTML）
+  const nm=(s.name||'クッキングクエスト').replace(/[\\/:*?"<>|]/g,'');
+  download(`${nm}_発表バックアップ.html`, html, 'text/html');
+  toast('発表バックアップを書き出したよ（オフライン用）🌐');
 }
 
 /* ================= レシピ図鑑 ================= */
@@ -813,7 +834,7 @@ async function saveSettings(){
     sound:$('#s-sound').value==='1'?1:0,
     intro:$('#s-intro').value, summary:$('#s-summary').value,
   };
-  await DB.setMeta('settings',state.settings);
+  try{ await store.setSettings(state.settings); }catch(e){ console.error(e); toast('保存に失敗…ネットを確認してね'); return; }
   toast('ほぞんしたよ 💾'); SFX.save();
   renderDash();
 }
@@ -835,7 +856,7 @@ async function loadDemo(){
   for(let i=0;i<demos.length;i++){
     const d=demos[i]; const day=base+d.day;
     const e={id:'demo_'+day+'_'+i,day,date:todayStr(),...d};
-    await DB.putEntry(e); state.entries.push(e);
+    const se=await store.putEntry(e); state.entries.push(se);
   }
   state.entries.sort((a,b)=>a.day-b.day);
   toast('デモを入れたよ 🧪'); show('dash');
@@ -843,7 +864,7 @@ async function loadDemo(){
 async function resetAll(){
   const ok=await confirmModal('全部リセット','ほんとうに ぜんぶ消しますか？（もとに戻せません）');
   if(!ok) return;
-  await DB.clearEntries(); state.entries=[];
+  await store.clearEntries(); state.entries=[];
   toast('リセットしたよ'); show('dash');
 }
 
@@ -910,7 +931,7 @@ function wire(){
     if(!state.editingId)return;
     const ok=await confirmModal('この日を消す','この日の記録を消しますか？');
     if(!ok)return;
-    await DB.delEntry(state.editingId);
+    await store.delEntry(state.editingId);
     state.entries=state.entries.filter(e=>e.id!==state.editingId);
     state.editingId=null; toast('消したよ'); show('dash');
   });
@@ -942,6 +963,12 @@ function wire(){
 
   // 設定・書き出し
   $('#save-settings').addEventListener('click',saveSettings);
+  $('#copy-url').addEventListener('click',()=>{
+    const el=$('#share-url'); el.select();
+    const done=()=>{ toast('URLをコピーしたよ📋 ほかの端末でひらいてね'); SFX.click(); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(el.value).then(done,()=>{document.execCommand('copy');done();}); }
+    else { try{document.execCommand('copy');}catch(e){} done(); }
+  });
   $('#export-json').addEventListener('click',exportJSON);
   $('#import-json').addEventListener('click',()=>$('#import-file').click());
   $('#import-file').addEventListener('change',e=>{ if(e.target.files[0]) importJSON(e.target.files[0]); e.target.value=''; });
@@ -954,22 +981,54 @@ function wire(){
 async function boot(){
   renderPixelLogo();
   renderHeroLogo();
+  const cloudOK = (window.Cloud && Cloud.configured() && Cloud.init());
+  store = cloudOK ? Cloud : dbAdapter;
   try{
-    await DB.init();
-    const savedSettings=await DB.getMeta('settings');
+    if(!cloudOK) await DB.init();               // ローカル予備のみ初期化
+    const savedSettings = await store.getSettings();
     if(savedSettings) state.settings={...state.settings,...savedSettings};
-    state.entries=(await DB.allEntries()).sort((a,b)=>a.day-b.day);
+    else if(cloudOK){ try{ await store.setSettings(state.settings); }catch(e){} } // 初期設定をクラウドに種まき（発表ページ用）
+    state.entries=(await store.allEntries()).sort((a,b)=>a.day-b.day);
   }catch(e){
-    console.error('DB init失敗',e);
-    toast('保存機能が使えないかも（ブラウザ設定を確認）');
+    console.error('データ読み込み失敗',e);
+    toast(cloudOK?'クラウドに接続できませんでした…ネットを確認':'保存機能が使えないかも');
   }
   fillSettingsForm();
+  updateShareUrl();
   wire();
   renderDash();
   applyPageStyle();
   // すでにログイン済みならログイン画面をスキップ
-  if(isAuthed()) $('#login').classList.add('hidden');
+  if(isAuthed()){ $('#login').classList.add('hidden'); afterLogin(); }
   else setTimeout(()=>{ try{ $('#login-pass').focus(); }catch(e){} },100);
+}
+// ログイン後（クラウドが空なら、この端末のローカル記録の引っ越しを提案）
+let migrateChecked=false;
+async function afterLogin(){
+  if(migrateChecked) return; migrateChecked=true;
+  if(store!==Cloud) return;
+  if(state.entries.length>0) return;
+  try{ localStorage.getItem('cq_ws'); }catch(e){}
+  let local=[];
+  try{ await DB.init(); local=await DB.allEntries(); }catch(e){}
+  if(!local.length) return;
+  const ok=await confirmModal('クラウドへ引っ越し',`この端末に ${local.length}日分 の記録があります。クラウドに移して、ほかの端末でも見られるようにしますか？`);
+  if(!ok) return;
+  toast('引っ越し中…写真をアップロード中');
+  for(const e of local){ try{ await Cloud.putEntry(e); }catch(err){ console.error(err); } }
+  try{ const ls=await DB.getMeta('settings'); if(ls) state.settings={...state.settings,...ls}; await Cloud.setSettings(state.settings); }catch(e){}
+  state.entries=(await Cloud.allEntries()).sort((a,b)=>a.day-b.day);
+  fillSettingsForm(); renderDash();
+  toast('引っ越し完了！🎉 このURLをほかの端末でも開いてね');
+}
+function updateShareUrl(){
+  const el=$('#share-url'); if(!el) return;
+  if(store===Cloud){
+    el.value = Cloud.shareUrl();
+    const n=$('#ws-note'); if(n) n.textContent = 'ワークスペースID: '+Cloud.getWs()+'（このIDが同じ端末どうしで共有されます）';
+  }else{
+    el.value = '（クラウド未設定：この端末だけに保存されています）';
+  }
 }
 document.addEventListener('DOMContentLoaded',boot);
 

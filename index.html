@@ -649,7 +649,17 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 
   <!-- ============ せってい ============ -->
   <section class="view" id="settings">
-    <div class="card">
+    <div class="card" style="background:linear-gradient(135deg,#0e2a3a,#0b1020);border-color:#1c5a7a">
+      <h2 class="section">🔗 共有URL（どの端末でも同じ記録）</h2>
+      <p class="muted">このURLを ふせておけば、パソコン・スマホ・iPad など どの端末で開いても同じ記録が出ます。iPadで開けばそのまま発表もできます。<b>大事なURLなので、なくさないように保存してね。</b></p>
+      <div class="row" style="margin-top:10px">
+        <input type="text" id="share-url" readonly style="flex:1;min-width:220px" onclick="this.select()">
+        <button class="btn sky sm" id="copy-url">📋 コピー</button>
+      </div>
+      <p class="muted" id="ws-note" style="font-size:12px;margin-top:8px"></p>
+    </div>
+
+    <div class="card" style="margin-top:18px">
       <h2 class="section">⚙️ せってい（自由研究のじょうほう）</h2>
       <p class="muted">ここに入れた名前や目標は、表紙やスライドに出るよ。</p>
       <div class="setting-grid" style="margin-top:14px">
@@ -670,8 +680,8 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
       <p class="muted">写真もぜんぶ入ったデータを保存できます。パソコンを変えるときや、消えてしまうのが心配なときに。</p>
       <div class="kv"><span>📦 データを保存（バックアップ）</span><button class="btn ghost sm" id="export-json">JSONで書き出す</button></div>
       <div class="kv"><span>📥 データを読みこむ（ふくげん）</span><button class="btn ghost sm" id="import-json">JSONを読みこむ</button></div>
-      <div class="kv"><span>🌐 発表ページを公開用に書き出す</span><button class="btn sky sm" id="export-site">present.html を保存</button></div>
-      <p class="muted" style="font-size:13px">※ 写真も文字も1つに入った完成ページ（present.html）を保存します。<br>そのあと「公開する.command」をダブルクリックすると、インターネット（発表ページのURL）に反映されます。QRコードの飛び先がこれです。</p>
+      <div class="kv"><span>🌐 発表をオフライン用に書き出す</span><button class="btn sky sm" id="export-site">バックアップHTMLを保存</button></div>
+      <p class="muted" style="font-size:13px">※ 発表は<b>すでにクラウドで自動共有</b>されています（上の「共有URL」）。QRコードもそのURLに自動でつながります。<br>このボタンは、ネットが無い場所でも開ける「1ファイル完結の発表バックアップ」を保存したいとき用です。</p>
       <input type="file" id="import-file" accept="application/json" hidden>
     </div>
 
@@ -723,6 +733,9 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 
 <style id="page-style">@page{size:A4 portrait;margin:10mm}</style>
 
+<script src="supabase.js"></script>
+<script src="cloud-config.js"></script>
+<script src="cloud.js"></script>
 <script src="qrcode.js"></script>
 <script src="recipes.js"></script>
 <script src="photos.js"></script>
