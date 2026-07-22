@@ -493,5 +493,85 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/60374260@N05/31123777390",
   "q": "takoyaki",
   "lic": "cc0,pdm"
+ },
+ "r51": {
+  "img": "photos/r51.jpg",
+  "title": "Kimchi Beef Udon at Bay Sushi Cafe - Roland in Vancouver 2082",
+  "creator": "roland",
+  "license": "CC0",
+  "version": "1.0",
+  "src": "https://www.flickr.com/photos/35034347371@N01/138568275"
+ },
+ "r52": {
+  "img": "photos/r52.jpg",
+  "title": "Vegetable udon noodle soup",
+  "creator": "Jennifer",
+  "license": "BY",
+  "version": "2.0",
+  "src": "https://commons.wikimedia.org/w/index.php?curid=34968433"
+ },
+ "r53": {
+  "img": "photos/r53.jpg",
+  "title": "20260425 Tsukimi Udon Restaurant Yoshi Hoan in Ikaruga Japan anagoria",
+  "creator": "anagoria",
+  "license": "BY-SA",
+  "version": "4.0",
+  "src": "https://commons.wikimedia.org/w/index.php?curid=190441581"
+ },
+ "r54": {
+  "img": "photos/r54.jpg",
+  "title": "Stir-fried noodles (Yaki-udon)",
+  "creator": "pelican",
+  "license": "BY-SA",
+  "version": "2.0",
+  "src": "https://www.flickr.com/photos/85936780@N00/2320197071"
+ },
+ "r55": {
+  "img": "photos/r55.jpg",
+  "title": "carbonara udon last night was delicious, thanks okasan!",
+  "creator": "roland",
+  "license": "CC0",
+  "version": "1.0",
+  "src": "https://www.flickr.com/photos/35034347371@N01/31227593715"
+ },
+ "r56": {
+  "img": "photos/r56.jpg",
+  "title": "Butter corn miso ramen of Yokohama Hakkeirou",
+  "creator": "毒島みるく",
+  "license": "CC0",
+  "version": "1.0",
+  "src": "https://commons.wikimedia.org/w/index.php?curid=94664471"
+ },
+ "r57": {
+  "img": "photos/r57.jpg",
+  "title": "Tokyo Ramen - Ichiban Boshi, The Galleries Victoria - ramen set AUD16",
+  "creator": "avlxyz",
+  "license": "BY-SA",
+  "version": "2.0",
+  "src": "https://www.flickr.com/photos/10559879@N00/3548097403"
+ },
+ "r58": {
+  "img": "photos/r58.jpg",
+  "title": "tonkotsu ramen",
+  "creator": "kinseikun",
+  "license": "CC0",
+  "version": "1.0",
+  "src": "https://www.flickr.com/photos/162338887@N06/39481472514"
+ },
+ "r59": {
+  "img": "photos/r59.jpg",
+  "title": "Santouka Shio Ramen Carry Out 2020",
+  "creator": "Bonnachoven",
+  "license": "CC0",
+  "version": "1.0",
+  "src": "https://commons.wikimedia.org/w/index.php?curid=92960826"
+ },
+ "r60": {
+  "img": "photos/r60.jpg",
+  "title": "abura soba",
+  "creator": "mitsukuni",
+  "license": "BY",
+  "version": "2.0",
+  "src": "https://www.flickr.com/photos/8796575@N02/2515248307"
  }
 };
