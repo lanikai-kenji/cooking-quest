@@ -708,14 +708,17 @@ function renderRecipes(){
   let chips = `<span class="chip catchip ${recipeCat==='all'?'on':''}" data-cat="all">🍽️ ぜんぶ</span>`;
   chips += cats.map(k=>{const c=RECIPE_CATS[k]; return `<span class="chip catchip ${recipeCat===k?'on':''}" data-cat="${k}">${c.emoji} ${c.name}</span>`;}).join('');
   $('#recipe-cats').innerHTML = chips;
+  const PH = window.RECIPE_PHOTOS||{};
   const list = RECIPES.filter(r=> recipeCat==='all' || r.c===recipeCat);
   $('#recipe-grid').innerHTML = list.map(r=>{
     const cat = RECIPE_CATS[r.c]||{name:'',emoji:'',g:['#555','#333']};
     const [c1,c2]=cat.g;
+    const ph = PH[r.id];
+    const photo = ph ? `<img class="photo" src="${esc(ph.img)}" alt="${esc(r.n)}" loading="lazy">` : '';
+    const sparks = ph ? '' : `<div class="spark" style="top:13%;left:13%">✨</div><div class="spark" style="bottom:15%;right:12%;font-size:12px">⭐</div>`;
     return `<div class="recipe-card" data-recipe="${r.id}">
       <div class="recipe-poster" style="background:linear-gradient(140deg,${c1},${c2})">
-        <div class="spark" style="top:13%;left:13%">✨</div>
-        <div class="spark" style="bottom:15%;right:12%;font-size:12px">⭐</div>
+        ${photo}${sparks}
         <span class="lv">${'★'.repeat(r.lv)}</span>
         <span class="time">⏱️${r.t}分</span>
         <span class="catbadge">${cat.emoji} ${esc(cat.name)}</span>
@@ -727,6 +730,24 @@ function renderRecipes(){
       </div>
     </div>`;
   }).join('');
+  renderRecipeCredits();
+}
+function renderRecipeCredits(){
+  const box=$('#recipe-credits'); if(!box) return;
+  const PH=window.RECIPE_PHOTOS||{};
+  const byId={}; RECIPES.forEach(r=>byId[r.id]=r);
+  const rows=Object.keys(PH).sort().map(id=>{
+    const p=PH[id], r=byId[id]; if(!r) return '';
+    const lic=esc((p.license||'')+(p.version?' '+p.version:''));
+    const by=p.creator?`／作者: ${esc(p.creator)}`:'';
+    const src=p.src?`　<a href="${esc(p.src)}" target="_blank" rel="noopener">出典</a>`:'';
+    return `<div><span class="cn">${esc(r.n)}</span> — 「${esc(p.title||'')}」${by}（${lic}）${src}</div>`;
+  }).join('');
+  box.innerHTML = `<details><summary>📷 写真のクレジット（フリー素材・${Object.keys(PH).length}枚）</summary>
+    <div class="clist">
+      <p>料理写真は Openverse 経由で取得したフリー素材（CC0・パブリックドメイン・CC-BY 等）です。各写真の題名・作者・ライセンス・出典は以下のとおり。</p>
+      ${rows}
+    </div></details>`;
 }
 function openRecipe(id){
   const r = RECIPES.find(x=>x.id===id); if(!r) return;
@@ -735,10 +756,14 @@ function openRecipe(id){
   const ing = r.ing.map(i=>`<div class="it">${esc(i)}</div>`).join('');
   const steps = r.st.map(s=>{const i=s.indexOf('|'); const e=s.slice(0,i), t=s.slice(i+1);
     return `<div class="rd-step"><div class="no"></div><div class="se">${e}</div><div class="st">${esc(t)}</div></div>`;}).join('');
+  const ph = (window.RECIPE_PHOTOS||{})[r.id];
+  const heroPhoto = ph ? `<img class="photo" src="${esc(ph.img)}" alt="${esc(r.n)}">` : '';
+  const heroSp = ph ? '' : `<div class="sp" style="top:18%;left:12%">✨</div><div class="sp" style="bottom:14%;right:12%">⭐</div>`;
   $('#recipe-detail-body').innerHTML = `
     <div class="rd-hero" style="background:linear-gradient(140deg,${c1},${c2})">
+      ${heroPhoto}
       <button class="close" id="rd-close" aria-label="とじる">✕</button>
-      <div class="sp" style="top:18%;left:12%">✨</div><div class="sp" style="bottom:14%;right:12%">⭐</div>
+      ${heroSp}
       <div class="dish">${r.e}</div>
     </div>
     <div class="rd-body">
