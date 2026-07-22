@@ -59,12 +59,15 @@ input,textarea,select{font-family:inherit}
 }
 .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.5px}
 .brand .logo{
-  width:44px;height:44px;border-radius:14px;
-  display:grid;place-items:center;font-size:24px;
-  background:linear-gradient(135deg,var(--fire),var(--lava));
-  box-shadow:0 6px 20px rgba(255,46,99,.45), inset 0 0 0 2px rgba(255,255,255,.15);
-  animation:wobble 3s ease-in-out infinite;
+  width:46px;height:46px;border-radius:12px;
+  display:grid;place-items:center;padding:5px;overflow:hidden;position:relative;
+  background:linear-gradient(180deg,#0a1020,#0e1732);
+  border:2px solid #2a3a5e;
+  box-shadow:0 6px 18px rgba(0,0,0,.5), inset 0 0 16px rgba(255,176,32,.15), inset 0 0 0 2px #0a1020;
 }
+.brand .logo .pixel-sprite{width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;
+  animation:heroBob 1.8s ease-in-out infinite}
+@keyframes heroBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8%)}}
 @keyframes wobble{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(6deg)}}
 .brand b{font-size:19px;line-height:1}
 .brand small{display:block;color:var(--sub);font-weight:700;font-size:11px;margin-top:2px}
@@ -307,6 +310,57 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 #levelup .box .em{font-size:80px;animation:shine 1.2s ease infinite}
 #levelup .box h2{font-size:34px;margin:10px 0;color:var(--gold)}
 
+/* ---------- レシピ図鑑 ---------- */
+#recipe-cats .catchip{cursor:pointer;transition:.15s transform,.15s background;user-select:none}
+#recipe-cats .catchip:hover{transform:translateY(-2px)}
+#recipe-cats .catchip.on{background:linear-gradient(135deg,var(--fire),var(--fire2));border-color:transparent;color:#231200}
+.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px}
+.recipe-card{border-radius:18px;overflow:hidden;background:var(--panel);border:1px solid var(--line);
+  cursor:pointer;transition:.15s transform,.15s box-shadow;display:flex;flex-direction:column}
+.recipe-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.recipe-poster{position:relative;aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden}
+.recipe-poster .dish{font-size:64px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.35));z-index:1;animation:dishFloat 3s ease-in-out infinite}
+@keyframes dishFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+.recipe-poster .spark{position:absolute;z-index:1;font-size:16px;opacity:.9}
+.recipe-poster .lv{position:absolute;top:8px;left:8px;z-index:2;background:rgba(0,0,0,.55);color:#ffd23f;
+  font-weight:900;font-size:12px;padding:3px 8px;border-radius:20px}
+.recipe-poster .time{position:absolute;top:8px;right:8px;z-index:2;background:rgba(0,0,0,.55);color:#fff;
+  font-weight:900;font-size:12px;padding:3px 8px;border-radius:20px}
+.recipe-poster .catbadge{position:absolute;bottom:8px;left:8px;z-index:2;background:rgba(0,0,0,.5);color:#fff;
+  font-weight:800;font-size:11px;padding:2px 8px;border-radius:20px}
+.recipe-info{padding:10px 12px 12px}
+.recipe-info .name{font-weight:900;font-size:15px;line-height:1.25}
+.recipe-info .nick{color:var(--sub);font-size:12px;margin-top:3px;line-height:1.3}
+
+.recipe-detail-bg{position:fixed;inset:0;z-index:340;background:rgba(5,7,15,.75);backdrop-filter:blur(5px);
+  display:none;place-items:start center;padding:24px 16px;overflow-y:auto}
+.recipe-detail-bg.show{display:grid}
+.recipe-detail{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);
+  border-radius:22px;max-width:620px;width:100%;box-shadow:var(--shadow);overflow:hidden;margin:auto}
+.rd-hero{position:relative;height:170px;display:grid;place-items:center}
+.rd-hero .dish{font-size:96px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.4));z-index:1;animation:dishFloat 3s ease-in-out infinite}
+.rd-hero .sp{position:absolute;font-size:20px;z-index:1}
+.rd-hero .close{position:absolute;top:12px;right:12px;z-index:3;border:none;width:38px;height:38px;border-radius:50%;
+  background:rgba(0,0,0,.5);color:#fff;font-weight:900;font-size:18px;cursor:pointer}
+.rd-body{padding:18px 20px 22px}
+.rd-body h3{margin:0;font-size:22px}
+.rd-body .nick{color:var(--fire2);font-weight:800;margin:4px 0 12px}
+.rd-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.rd-meta .m{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-weight:800;font-size:13px}
+.rd-sec{margin-top:16px}
+.rd-sec h4{margin:0 0 8px;font-size:16px;display:flex;align-items:center;gap:7px;color:var(--fire2)}
+.rd-ing{display:flex;flex-wrap:wrap;gap:8px}
+.rd-ing .it{background:#0c1226;border:1px solid var(--line);border-radius:10px;padding:7px 11px;font-size:14px;font-weight:700}
+.rd-steps{display:flex;flex-direction:column;gap:10px;counter-reset:st}
+.rd-step{display:flex;gap:12px;align-items:flex-start;background:#0c1226;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.rd-step .no{counter-increment:st;flex:0 0 auto;width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--fire),var(--lava));color:#fff;font-weight:900;display:grid;place-items:center;font-size:14px}
+.rd-step .no::before{content:counter(st)}
+.rd-step .se{font-size:24px;line-height:1;flex:0 0 auto}
+.rd-step .st{line-height:1.5;font-weight:600;padding-top:2px}
+.rd-tip{background:#141a33;border:1px dashed var(--fire2);border-radius:14px;padding:12px 14px;font-weight:700;line-height:1.5}
+.rd-help{background:#2a1420;border:1px solid var(--lava);border-radius:14px;padding:12px 14px;color:#ffd0d8;font-weight:800;line-height:1.5;margin-top:12px}
+
 /* ---------- ログイン ---------- */
 #login{position:fixed;inset:0;z-index:600;display:grid;place-items:center;padding:20px;
   background:
@@ -380,7 +434,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 <!-- ============ トップバー ============ -->
 <header class="topbar">
   <div class="brand">
-    <div class="logo">🔥</div>
+    <div class="logo" id="brand-logo"></div>
     <div>
       <b>クッキングクエスト</b>
       <small id="brand-sub">20日間 おひるごはんチャレンジ</small>
@@ -392,6 +446,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
     <button data-view="entry"><span class="ic">✍️</span>記録する</button>
     <button data-view="present"><span class="ic">🎤</span>発表モード</button>
     <button data-view="print"><span class="ic">🖨️</span>印刷・PDF</button>
+    <button data-view="recipes"><span class="ic">📖</span>レシピ</button>
     <button data-view="settings"><span class="ic">⚙️</span>せってい</button>
   </nav>
 </header>
@@ -572,6 +627,16 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
     </div>
   </section>
 
+  <!-- ============ レシピ図鑑 ============ -->
+  <section class="view" id="recipes">
+    <div class="card" style="background:linear-gradient(135deg,#241033,#3a1030 60%,#0b1020)">
+      <h2 class="section">📖 レシピ図鑑 <span class="chip" id="recipe-count"></span></h2>
+      <p class="muted">「作ってみたい！」をタップすると、材料・作り方が出るよ。そのまま「記録する」に写せるので、まよったらここから選ぼう！🍳</p>
+      <div class="chips" id="recipe-cats" style="margin-top:12px"></div>
+    </div>
+    <div class="recipe-grid" id="recipe-grid" style="margin-top:16px"></div>
+  </section>
+
   <!-- ============ せってい ============ -->
   <section class="view" id="settings">
     <div class="card">
@@ -629,6 +694,9 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 <div id="levelup"><div class="box"><div class="em">🏆</div><h2 id="lu-title">レベルアップ！</h2><p id="lu-sub"></p></div></div>
 <div class="modal-bg" id="modal"><div class="modal"><h3 id="m-title"></h3><div id="m-body"></div><div class="row end" style="margin-top:16px"><button class="btn ghost sm" id="m-cancel">キャンセル</button><button class="btn sm" id="m-ok">OK</button></div></div></div>
 
+<!-- レシピ詳細 -->
+<div class="recipe-detail-bg" id="recipe-detail"><div class="recipe-detail" id="recipe-detail-body"></div></div>
+
 <!-- ============ ログイン画面 ============ -->
 <div id="login">
   <div class="login-card">
@@ -646,6 +714,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 <style id="page-style">@page{size:A4 portrait;margin:10mm}</style>
 
 <script src="qrcode.js"></script>
+<script src="recipes.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -54,11 +54,10 @@ const state = {
   },
 };
 
-/* ---------------- ピクセルアート ログインアイコン（ドラクエ風スライム） ---------------- */
-function renderPixelLogo(){
-  const el = document.getElementById('login-logo'); if(!el) return;
-  // 16x16 ドット絵：コック帽をかぶったスライム
-  const PIX = [
+/* ---------------- ピクセルアート（ドラクエ風ドット絵） ---------------- */
+// コック帽スライム（ログイン画面）
+const SPRITE_SLIME = {
+  pix:[
     "................",
     ".....oooooo.....",
     "....oWWWWWWo....",
@@ -75,18 +74,54 @@ function renderPixelLogo(){
     ".obbbbmmmmbbbbo.",
     "obbbbbbbbbbbbbbo",
     ".oooooooooooooo.",
-  ];
-  const PAL = { o:'#0d294a', b:'#33a1ee', h:'#8fd6ff', W:'#ffffff', g:'#c9d4e4', e:'#ffffff', p:'#0d294a', m:'#0d294a' };
-  const cell=6, N=16;
-  let rects='';
-  for(let y=0;y<PIX.length;y++){
-    const row=PIX[y];
+  ],
+  pal:{ o:'#0d294a', b:'#33a1ee', h:'#8fd6ff', W:'#ffffff', g:'#c9d4e4', e:'#ffffff', p:'#0d294a', m:'#0d294a' }
+};
+// ドラクエ勇者（ヘッダー）：とんがり帽・剣・チュニック
+const SPRITE_HERO = {
+  pix:[
+    "......oo.....a..",
+    ".....okko....A..",
+    "....okkkko...A..",
+    "...okkkkkko..A..",
+    "...okkggkkko.A..",
+    "...okkkkkkkoyyy.",
+    "...ossssssso.b..",
+    "...osessseso.b..",
+    "...ossSSSsso.y..",
+    "...ottttttto....",
+    "..otTtttttTto...",
+    "..ottttttttto...",
+    "..obbbbbbbbbo...",
+    "..ottttttttto...",
+    "....tt...tt.....",
+    "....oo...oo.....",
+  ],
+  pal:{
+    o:'#0e1a33', k:'#3b6fd6', g:'#ffd23f', y:'#ffd23f',
+    s:'#ffd0a6', S:'#e0a074', e:'#0e1a33',
+    t:'#2747a6', T:'#5578d6', d:'#1b2f70', b:'#8a5a2c',
+    a:'#c7cfdb', A:'#ffffff'
+  }
+};
+function buildSpriteSVG(sprite, cell){
+  const N=sprite.pix.length; let rects='';
+  for(let y=0;y<sprite.pix.length;y++){
+    const row=sprite.pix[y];
     for(let x=0;x<row.length;x++){
-      const col=PAL[row[x]]; if(!col) continue;
+      const col=sprite.pal[row[x]]; if(!col) continue;
       rects+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="${col}"/>`;
     }
   }
-  el.innerHTML = `<svg class="pixel-sprite" viewBox="0 0 ${N*cell} ${N*cell}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
+  return `<svg class="pixel-sprite" viewBox="0 0 ${16*cell} ${N*cell}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
+}
+function renderPixelLogo(){
+  const el = document.getElementById('login-logo');
+  if(el) el.innerHTML = buildSpriteSVG(SPRITE_SLIME, 6);
+}
+function renderHeroLogo(){
+  const el = document.getElementById('brand-logo');
+  if(el) el.innerHTML = buildSpriteSVG(SPRITE_HERO, 6);
 }
 
 /* ---------------- ログイン（超簡易・あいことば方式） ---------------- */
@@ -179,6 +214,7 @@ function show(view){
   $$('.wrap > .view').forEach(v=>v.classList.toggle('active', v.id===(view==='print'?'print-view':view)));
   if(view==='dash') renderDash();
   if(view==='print') renderReport();
+  if(view==='recipes') renderRecipes();
   SFX.nav();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -663,6 +699,77 @@ function exportSite(){
   toast('発表ページ(present.html)を書き出したよ 🌐');
 }
 
+/* ================= レシピ図鑑 ================= */
+let recipeCat = 'all';
+function renderRecipes(){
+  if(typeof RECIPES==='undefined' || typeof RECIPE_CATS==='undefined') return;
+  $('#recipe-count').textContent = RECIPES.length+'品';
+  const cats = Object.keys(RECIPE_CATS);
+  let chips = `<span class="chip catchip ${recipeCat==='all'?'on':''}" data-cat="all">🍽️ ぜんぶ</span>`;
+  chips += cats.map(k=>{const c=RECIPE_CATS[k]; return `<span class="chip catchip ${recipeCat===k?'on':''}" data-cat="${k}">${c.emoji} ${c.name}</span>`;}).join('');
+  $('#recipe-cats').innerHTML = chips;
+  const list = RECIPES.filter(r=> recipeCat==='all' || r.c===recipeCat);
+  $('#recipe-grid').innerHTML = list.map(r=>{
+    const cat = RECIPE_CATS[r.c]||{name:'',emoji:'',g:['#555','#333']};
+    const [c1,c2]=cat.g;
+    return `<div class="recipe-card" data-recipe="${r.id}">
+      <div class="recipe-poster" style="background:linear-gradient(140deg,${c1},${c2})">
+        <div class="spark" style="top:13%;left:13%">✨</div>
+        <div class="spark" style="bottom:15%;right:12%;font-size:12px">⭐</div>
+        <span class="lv">${'★'.repeat(r.lv)}</span>
+        <span class="time">⏱️${r.t}分</span>
+        <span class="catbadge">${cat.emoji} ${esc(cat.name)}</span>
+        <div class="dish">${r.e}</div>
+      </div>
+      <div class="recipe-info">
+        <div class="name">${esc(r.n)}</div>
+        <div class="nick">${esc(r.nick)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function openRecipe(id){
+  const r = RECIPES.find(x=>x.id===id); if(!r) return;
+  const cat = RECIPE_CATS[r.c]||{name:'',emoji:'',g:['#555','#333']};
+  const [c1,c2]=cat.g;
+  const ing = r.ing.map(i=>`<div class="it">${esc(i)}</div>`).join('');
+  const steps = r.st.map(s=>{const i=s.indexOf('|'); const e=s.slice(0,i), t=s.slice(i+1);
+    return `<div class="rd-step"><div class="no"></div><div class="se">${e}</div><div class="st">${esc(t)}</div></div>`;}).join('');
+  $('#recipe-detail-body').innerHTML = `
+    <div class="rd-hero" style="background:linear-gradient(140deg,${c1},${c2})">
+      <button class="close" id="rd-close" aria-label="とじる">✕</button>
+      <div class="sp" style="top:18%;left:12%">✨</div><div class="sp" style="bottom:14%;right:12%">⭐</div>
+      <div class="dish">${r.e}</div>
+    </div>
+    <div class="rd-body">
+      <h3>${esc(r.n)}</h3>
+      <div class="nick">${esc(r.nick)}</div>
+      <div class="rd-meta">
+        <span class="m">⏱️ ${r.t}分</span>
+        <span class="m">むずかしさ ${'★'.repeat(r.lv)}${'☆'.repeat(3-r.lv)}</span>
+        <span class="m">👦 ${r.sv}人分</span>
+        <span class="m">${cat.emoji} ${esc(cat.name)}</span>
+      </div>
+      <div class="rd-sec"><h4>🧂 材料（ざいりょう）</h4><div class="rd-ing">${ing}</div></div>
+      <div class="rd-sec"><h4>👨‍🍳 作り方</h4><div class="rd-steps">${steps}</div></div>
+      ${r.tip?`<div class="rd-sec"><h4>💡 コツ</h4><div class="rd-tip">${esc(r.tip)}</div></div>`:''}
+      ${r.help?`<div class="rd-help">⚠️ ${esc(r.help)}</div>`:''}
+      <button class="btn big" id="rd-use" style="margin-top:18px">✍️ この料理で記録する</button>
+    </div>`;
+  const bg=$('#recipe-detail'); bg.classList.add('show'); bg.scrollTop=0;
+  $('#rd-close').onclick = closeRecipe;
+  $('#rd-use').onclick = ()=>useRecipe(r);
+}
+function closeRecipe(){ $('#recipe-detail').classList.remove('show'); }
+function useRecipe(r){
+  closeRecipe();
+  openNewEntry();
+  $('#f-title').value = r.n;
+  $('#f-ing').value = r.ing.join('\n');
+  $('#f-steps').value = r.st.map(s=>{const i=s.indexOf('|'); return s.slice(i+1);}).join('\n');
+  toast('レシピを記録フォームに写したよ！ 作って写真をとろう📸');
+}
+
 /* ================= 設定フォーム ================= */
 function fillSettingsForm(){
   const s=state.settings;
@@ -738,6 +845,18 @@ function wire(){
   });
   $('#quick-add').addEventListener('click',()=>openNewEntry());
 
+  // レシピ図鑑
+  $('#recipe-cats').addEventListener('click',e=>{
+    const c=e.target.closest('[data-cat]'); if(!c)return;
+    recipeCat=c.dataset.cat; renderRecipes(); SFX.click();
+  });
+  $('#recipe-grid').addEventListener('click',e=>{
+    const card=e.target.closest('[data-recipe]'); if(!card)return;
+    openRecipe(card.dataset.recipe); SFX.click();
+  });
+  $('#recipe-detail').addEventListener('click',e=>{ if(e.target.id==='recipe-detail') closeRecipe(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && $('#recipe-detail').classList.contains('show')) closeRecipe(); });
+
   // フォーム：写真
   const dz=$('#dropzone'), fileInput=$('#f-photo');
   dz.addEventListener('click',()=>fileInput.click());
@@ -809,6 +928,7 @@ function wire(){
 /* ================= 起動 ================= */
 async function boot(){
   renderPixelLogo();
+  renderHeroLogo();
   try{
     await DB.init();
     const savedSettings=await DB.getMeta('settings');
