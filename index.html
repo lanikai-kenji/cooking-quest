@@ -87,14 +87,14 @@ input,textarea,select{font-family:inherit}
 }
 .nav button .ic{margin-right:6px}
 
-.hdr-qr{display:flex;align-items:center;gap:6px;border:1px solid var(--line);
+#header-qr{display:flex;align-items:center;gap:6px;border:1px solid var(--line);
   background:linear-gradient(135deg,var(--sky),var(--purple));color:#04121f;
   padding:9px 14px;border-radius:12px;font-weight:900;font-size:14px;
   box-shadow:0 6px 18px rgba(55,182,255,.35);transition:.15s transform}
-.hdr-qr:hover{transform:translateY(-2px)}
-.hdr-qr b{font-weight:900}
+#header-qr:hover{transform:translateY(-2px)}
+#header-qr b{font-weight:900}
 #qr-img-box img{width:230px;height:230px;image-rendering:pixelated;border:8px solid #fff;border-radius:10px;background:#fff}
-@media (max-width:720px){ .hdr-qr b{display:none} .hdr-qr{padding:9px 11px} }
+@media (max-width:720px){ #header-qr b{display:none} #header-qr{padding:9px 11px} }
 
 /* ---------- レイアウト ---------- */
 .wrap{max-width:1120px;margin:0 auto;padding:22px 18px 90px}
@@ -459,10 +459,10 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
     </div>
   </div>
   <div class="spacer"></div>
-  <button class="hdr-qr" id="header-qr" title="共有QRコード（ほかの端末で開く）">📱<b>共有QR</b></button>
   <nav class="nav" id="nav">
     <button data-view="dash" class="active"><span class="ic">🏠</span>ホーム</button>
     <button data-view="entry"><span class="ic">✍️</span>記録する</button>
+    <button id="header-qr" title="共有QRコード（ほかの端末で開く）">📱<b>共有QR</b></button>
     <button data-view="present"><span class="ic">🎤</span>発表モード</button>
     <button data-view="print"><span class="ic">🖨️</span>印刷・PDF</button>
     <button data-view="recipes"><span class="ic">📖</span>レシピ</button>
