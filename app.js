@@ -535,6 +535,18 @@ function applyPageStyle(){
 }
 function starStr(n){ return '★'.repeat(n||0)+'☆'.repeat(Math.max(0,5-(n||0))); }
 
+/* ヘッダーの「共有QR」を表示 */
+function openShareQR(){
+  const url = (store===Cloud) ? Cloud.shareUrl() : location.href.split('#')[0];
+  $('#qr-url').value = url;
+  const img = makeQR(url);
+  $('#qr-img-box').innerHTML = img
+    ? `<img src="${img}" alt="共有QRコード">`
+    : '<p class="muted">QRを作れませんでした</p>';
+  $('#qr-modal').classList.add('show');
+  SFX.click();
+}
+
 /* QRコードを dataURL（GIF）で作る。ライブラリが無ければ null */
 function makeQR(text){
   if(!text || typeof qrcode==='undefined') return null;
@@ -874,6 +886,18 @@ function wire(){
   $('#login-btn').addEventListener('click',doLogin);
   $('#login-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
   $('#login-toggle').addEventListener('change',e=>{ $('#login-pass').type = e.target.checked?'text':'password'; });
+
+  // ヘッダーの共有QR
+  $('#header-qr').addEventListener('click', openShareQR);
+  $('#qr-close').addEventListener('click', ()=>$('#qr-modal').classList.remove('show'));
+  $('#qr-modal').addEventListener('click', e=>{ if(e.target.id==='qr-modal') $('#qr-modal').classList.remove('show'); });
+  $('#qr-copy').addEventListener('click', ()=>{
+    const el=$('#qr-url'); el.select();
+    const done=()=>{ toast('URLをコピーしたよ📋 ほかの端末でひらいてね'); SFX.click(); };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(el.value).then(done,done);
+    else { try{document.execCommand('copy');}catch(e){} done(); }
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && $('#qr-modal').classList.contains('show')) $('#qr-modal').classList.remove('show'); });
 
   // ナビ
   $('#nav').addEventListener('click',e=>{

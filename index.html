@@ -87,6 +87,15 @@ input,textarea,select{font-family:inherit}
 }
 .nav button .ic{margin-right:6px}
 
+.hdr-qr{display:flex;align-items:center;gap:6px;border:1px solid var(--line);
+  background:linear-gradient(135deg,var(--sky),var(--purple));color:#04121f;
+  padding:9px 14px;border-radius:12px;font-weight:900;font-size:14px;
+  box-shadow:0 6px 18px rgba(55,182,255,.35);transition:.15s transform}
+.hdr-qr:hover{transform:translateY(-2px)}
+.hdr-qr b{font-weight:900}
+#qr-img-box img{width:230px;height:230px;image-rendering:pixelated;border:8px solid #fff;border-radius:10px;background:#fff}
+@media (max-width:720px){ .hdr-qr b{display:none} .hdr-qr{padding:9px 11px} }
+
 /* ---------- レイアウト ---------- */
 .wrap{max-width:1120px;margin:0 auto;padding:22px 18px 90px}
 .view{display:none;animation:pop .35s ease both}
@@ -450,6 +459,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
     </div>
   </div>
   <div class="spacer"></div>
+  <button class="hdr-qr" id="header-qr" title="共有QRコード（ほかの端末で開く）">📱<b>共有QR</b></button>
   <nav class="nav" id="nav">
     <button data-view="dash" class="active"><span class="ic">🏠</span>ホーム</button>
     <button data-view="entry"><span class="ic">✍️</span>記録する</button>
@@ -716,6 +726,20 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 
 <!-- レシピ詳細 -->
 <div class="recipe-detail-bg" id="recipe-detail"><div class="recipe-detail" id="recipe-detail-body"></div></div>
+
+<!-- 共有QRコード -->
+<div class="modal-bg" id="qr-modal">
+  <div class="modal" style="max-width:420px;text-align:center">
+    <h3>📱 共有QRコード</h3>
+    <p class="muted" style="font-size:13px">スマホやiPadのカメラでこのQRを読み取ると、<b>同じ記録</b>が開けます。発表もそのままできます。</p>
+    <div id="qr-img-box" style="margin:16px auto"></div>
+    <input type="text" id="qr-url" readonly onclick="this.select()" style="width:100%;text-align:center;font-size:12px">
+    <div class="row" style="justify-content:center;margin-top:14px">
+      <button class="btn sky sm" id="qr-copy">📋 URLをコピー</button>
+      <button class="btn ghost sm" id="qr-close">とじる</button>
+    </div>
+  </div>
+</div>
 
 <!-- ============ ログイン画面 ============ -->
 <div id="login">
