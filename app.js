@@ -475,8 +475,9 @@ function buildSlides(){
     const sl=document.createElement('div'); sl.className='slide';
     const photos=(e.photos||[]).slice(0,4);
     let grid='1fr'; if(photos.length===2)grid='1fr 1fr'; if(photos.length===3)grid='2fr 1fr'; if(photos.length>=4)grid='1fr 1fr';
+    const shot = u => `<div class="shot"><span style="background-image:url('${u}')"></span><img src="${u}" alt=""></div>`;
     const photoHTML = photos.length
-      ? `<div class="big-photos" style="grid-template-columns:${grid}">${photos.map(p=>`<img src="${p}">`).join('')}</div>`
+      ? `<div class="big-photos" style="grid-template-columns:${grid}">${photos.map(shot).join('')}</div>`
       : `<div class="big-photos" style="place-items:center;font-size:12vmin">🍽️</div>`;
     const stars='⭐'.repeat(e.stars||0);
     sl.innerHTML=`
@@ -595,7 +596,7 @@ function compactDayHTML(e){
   const ings=(e.ingredients||'').split('\n').map(x=>x.trim()).filter(Boolean);
   return `<div style="display:flex;gap:5mm;padding:4mm 0;border-bottom:1.5px dashed #ffd7b8;flex:1;min-height:0">
     <div style="flex:0 0 46%;border-radius:3mm;overflow:hidden;background:#f4f4f4;display:grid;place-items:center">
-      ${ph?`<img src="${ph}" style="width:100%;height:100%;object-fit:cover">`:`<div style="font-size:20mm">🍽️</div>`}
+      ${ph?`<img src="${ph}" style="width:100%;height:100%;object-fit:contain">`:`<div style="font-size:20mm">🍽️</div>`}
     </div>
     <div style="flex:1;display:flex;flex-direction:column;min-width:0">
       <div style="display:flex;justify-content:space-between;align-items:baseline">
@@ -1069,8 +1070,10 @@ body{font-family:system-ui,-apple-system,"Hiragino Maru Gothic ProN","Yu Gothic"
 @keyframes in{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
 .k{color:#ffd23f;font-weight:900;letter-spacing:2px;font-size:clamp(14px,2.4vmin,22px)}
 h1{font-size:clamp(30px,7vmin,74px);margin:.2em 0;line-height:1.05}
-.ph{flex:1;display:grid;gap:2vmin;min-height:0}
-.ph img{width:100%;height:100%;object-fit:cover;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+.ph{flex:1;display:grid;gap:2vmin;min-height:0;grid-auto-rows:1fr}
+.ph .shot{position:relative;overflow:hidden;border-radius:18px;background:#05070f;box-shadow:0 20px 50px rgba(0,0,0,.6);min-height:0}
+.ph .shot>span{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(22px) brightness(.5);transform:scale(1.25)}
+.ph .shot>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1}
 .m{display:flex;flex-wrap:wrap;gap:2vmin;margin-top:2vmin;font-size:clamp(15px,2.6vmin,26px)}
 .m .b{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:1.4vmin 2vmin}
 .m .b b{color:#ffd23f}
@@ -1095,7 +1098,8 @@ let slides=[];
 slides.push('<div class="sl cover"><div class="plate">🍽️</div><div class="k">じゆうけんきゅう / COOKING QUEST</div><h1>'+esc(S.title||'')+'</h1><div class="m" style="justify-content:center"><div class="b"><b>なまえ</b> '+esc(S.name||'')+'</div><div class="b"><b>クラス</b> '+esc(S.grade||'')+'</div><div class="b"><b>クリア</b> '+E.length+'日</div></div></div>');
 if(S.intro&&S.intro.trim())slides.push('<div class="sl"><div class="k">はじめに</div><h1>なぜ やろうと思ったか 💡</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.intro)+'</div></div></div>');
 E.forEach(e=>{const p=(e.photos||[]).slice(0,4);let g='1fr';if(p.length===2)g='1fr 1fr';if(p.length===3)g='2fr 1fr';if(p.length>=4)g='1fr 1fr';
-const ph=p.length?'<div class="ph" style="grid-template-columns:'+g+'">'+p.map(x=>'<img src="'+x+'">').join('')+'</div>':'<div class="ph" style="place-items:center;font-size:12vmin">🍽️</div>';
+const shot=x=>'<div class="shot"><span style="background-image:url(\''+x+'\')"></span><img src="'+x+'"></div>';
+const ph=p.length?'<div class="ph" style="grid-template-columns:'+g+'">'+p.map(shot).join('')+'</div>':'<div class="ph" style="place-items:center;font-size:12vmin">🍽️</div>';
 const st='⭐'.repeat(e.stars||0);
 slides.push('<div class="sl"><div class="k">'+e.day+'日目 ・ '+esc(fd(e.date))+'</div><h1>'+esc(e.title||'')+'</h1>'+ph+'<div class="m">'+(e.ingredients?'<div class="b"><b>材料</b> '+esc((e.ingredients||'').split("\\n").filter(Boolean).join("、"))+'</div>':'')+(e.yum?'<div class="b">'+esc(e.yum)+'</div>':'')+(st?'<div class="b">'+st+'</div>':'')+(e.note?'<div class="b"><b>ひとこと</b> '+esc(e.note)+'</div>':'')+'</div></div>');});
 if(S.summary&&S.summary.trim())slides.push('<div class="sl"><div class="k">まとめ</div><h1>やってみて わかったこと 🏁</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.summary)+'</div></div></div>');

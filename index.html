@@ -232,8 +232,10 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 @keyframes slidein{from{opacity:0;transform:translateX(40px) scale(.98)}to{opacity:1;transform:none}}
 .slide .kicker{font-weight:900;color:var(--gold);letter-spacing:2px;font-size:clamp(14px,2.4vmin,22px)}
 .slide h1{font-size:clamp(30px,7vmin,74px);margin:.2em 0;line-height:1.05;text-shadow:0 4px 0 rgba(0,0,0,.4)}
-.slide .big-photos{flex:1;display:grid;gap:2vmin;min-height:0}
-.slide .big-photos img{width:100%;height:100%;object-fit:cover;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+.slide .big-photos{flex:1;display:grid;gap:2vmin;min-height:0;grid-auto-rows:1fr}
+.slide .big-photos .shot{position:relative;overflow:hidden;border-radius:18px;background:#05070f;box-shadow:0 20px 50px rgba(0,0,0,.6);min-height:0}
+.slide .big-photos .shot > span{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(22px) brightness(.5);transform:scale(1.25)}
+.slide .big-photos .shot > img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1}
 .slide .meta{display:flex;flex-wrap:wrap;gap:2vmin;margin-top:2vmin;font-size:clamp(15px,2.6vmin,26px)}
 .slide .meta .box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:1.4vmin 2vmin;backdrop-filter:blur(4px)}
 .slide .meta .box b{color:var(--gold)}
@@ -268,7 +270,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.5}
 .paper .p-head .pdate{font-weight:800;color:#555}
 .paper h3.p-title{margin:2mm 0 3mm;font-size:8mm;line-height:1.15}
 .paper .p-photos{display:grid;gap:4mm}
-.paper .p-photos img{width:100%;height:100%;object-fit:cover;border-radius:3mm;border:1px solid #eee}
+.paper .p-photos img{width:100%;height:100%;object-fit:contain;background:#f5f5f5;border-radius:3mm;border:1px solid #eee}
 .paper .p-body{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:4mm}
 .paper .p-block{background:#fff7ef;border:1.5px solid #ffd7b8;border-radius:3mm;padding:3mm 4mm}
 .paper .p-block h4{margin:0 0 1.5mm;color:#e2560f;font-size:4mm;display:flex;align-items:center;gap:1.5mm}
