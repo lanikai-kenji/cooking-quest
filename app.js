@@ -12,8 +12,15 @@ const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
 const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nl2br = s => esc(s).replace(/\n/g,'<br>');
 const todayStr = ()=>{const d=new Date();const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;};
-const fmtDate = s => { if(!s) return ''; const d=new Date(s+'T00:00:00'); if(isNaN(d)) return s;
-  const w=['日','月','火','水','木','金','土'][d.getDay()]; return `${d.getMonth()+1}月${d.getDate()}日(${w})`; };
+const fmtDate = s => {
+  if(!s) return '';
+  const [y,m,d] = s.split('-').map(Number);
+  if(!y||!m||!d) return s;
+  const date = new Date(y, m-1, d);
+  if(isNaN(date)) return s;
+  const w=['日','月','火','水','木','金','土'][date.getDay()];
+  return `${date.getMonth()+1}月${date.getDate()}日(${w})`;
+};
 
 /* ---------------- IndexedDB ラッパ ---------------- */
 const DB = (()=>{
@@ -1099,7 +1106,7 @@ h1{font-size:clamp(30px,7vmin,74px);margin:.2em 0;line-height:1.05}
 const D=__DATA__;
 const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nl=s=>esc(s).replace(/\\n/g,'<br>');
-const fd=s=>{if(!s)return'';const d=new Date(s+'T00:00:00');if(isNaN(d))return s;const w=['日','月','火','水','木','金','土'][d.getDay()];return (d.getMonth()+1)+'月'+d.getDate()+'日('+w+')';};
+const fd=s=>{if(!s)return'';const[y,m,d]=s.split('-').map(Number);if(!y||!m||!d)return s;const date=new Date(y,m-1,d);if(isNaN(date))return s;const w=['日','月','火','水','木','金','土'][date.getDay()];return(date.getMonth()+1)+'月'+date.getDate()+'日('+w+')';};
 const S=D.settings,E=D.entries.slice().sort((a,b)=>a.day-b.day);
 let slides=[];
 slides.push('<div class="sl cover"><div class="plate">🍽️</div><div class="k">じゆうけんきゅう / COOKING QUEST</div><h1>'+esc(S.title||'')+'</h1><div class="m" style="justify-content:center"><div class="b"><b>なまえ</b> '+esc(S.name||'')+'</div><div class="b"><b>クラス</b> '+esc(S.grade||'')+'</div><div class="b"><b>クリア</b> '+E.length+'日</div></div></div>');

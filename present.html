@@ -41,7 +41,7 @@ h1{font-size:clamp(30px,7vmin,74px);margin:.2em 0;line-height:1.05}
 <script>
 const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nl=s=>esc(s).replace(/\n/g,'<br>');
-const fd=s=>{if(!s)return'';const d=new Date(s+'T00:00:00');if(isNaN(d))return s;const w=['日','月','火','水','木','金','土'][d.getDay()];return (d.getMonth()+1)+'月'+d.getDate()+'日('+w+')';};
+const fd=s=>{if(!s)return'';const[y,m,d]=s.split('-').map(Number);if(!y||!m||!d)return s;const date=new Date(y,m-1,d);if(isNaN(date))return s;const w=['日','月','火','水','木','金','土'][date.getDay()];return(date.getMonth()+1)+'月'+date.getDate()+'日('+w+')';};
 let slides=[],els=[],i=0;
 function go(n){if(!els.length)return;i=Math.max(0,Math.min(els.length-1,n));els.forEach((el,k)=>el.classList.toggle('on',k===i));document.getElementById('no').textContent=(i+1)+' / '+els.length;document.getElementById('pi').style.width=((i+1)/els.length*100)+'%';}
 function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
