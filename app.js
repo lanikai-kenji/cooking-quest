@@ -400,7 +400,7 @@ async function saveEntry(){
   saveBtn.disabled=false; saveBtn.textContent=oldLabel;
   const idx=state.entries.findIndex(e=>e.id===saved.id);
   if(idx>=0) state.entries[idx]=saved; else state.entries.push(saved);
-  state.entries.sort((a,b)=>a.day-b.day);
+  state.entries=dedupeByDay(state.entries).kept;
 
   SFX.save(); confetti();
   const afterCleared = Math.min(state.entries.length, state.settings.goal);
@@ -442,11 +442,27 @@ function confirmModal(title, body){
 }
 
 /* ================= 発表スライド ================= */
+/* ---------------- 同じ日の重複をまとめる（新しい方を残す） ---------------- */
+function dedupeByDay(list){
+  const sorted=[...list].sort((a,b)=>(a.day-b.day)||((a.createdAt||0)-(b.createdAt||0)));
+  const byDay=new Map(), losers=[];
+  for(const e of sorted){ if(byDay.has(e.day)) losers.push(byDay.get(e.day)); byDay.set(e.day,e); }
+  return { kept:[...byDay.values()].sort((a,b)=>a.day-b.day), losers };
+}
+// クラウド/ローカルから読み込み → 重複を除外（クラウドは重複行もお掃除）
+async function loadEntriesDeduped(){
+  const { kept, losers } = dedupeByDay(await store.allEntries());
+  if(store===Cloud && losers.length){
+    for(const e of losers){ try{ await Cloud.delEntry(e.id); }catch(_){} }
+  }
+  return kept;
+}
+
 let slideIdx=0, slideEls=[];
 function buildSlides(){
   const s=state.settings;
   const wrap=$('#slides'); wrap.innerHTML='';
-  const entries=[...state.entries].sort((a,b)=>a.day-b.day);
+  const entries=dedupeByDay(state.entries).kept;
 
   // 表紙
   const cover=document.createElement('div');
@@ -713,7 +729,7 @@ async function importJSON(file){
     await store.clearEntries();
     for(const e of data.entries) await store.putEntry(e);
     if(data.settings){ state.settings={...state.settings,...data.settings}; await store.setSettings(state.settings); }
-    state.entries=(await store.allEntries()).sort((a,b)=>a.day-b.day);
+    state.entries=await loadEntriesDeduped();
     fillSettingsForm();
     toast('読みこんだよ！ ✅'); show('dash');
   }catch(e){ console.error(e); toast('読みこめませんでした…'); }
@@ -871,7 +887,7 @@ async function loadDemo(){
     const e={id:'demo_'+day+'_'+i,day,date:todayStr(),...d};
     const se=await store.putEntry(e); state.entries.push(se);
   }
-  state.entries.sort((a,b)=>a.day-b.day);
+  state.entries=dedupeByDay(state.entries).kept;
   toast('デモを入れたよ 🧪'); show('dash');
 }
 async function resetAll(){
@@ -1013,7 +1029,7 @@ async function boot(){
     const savedSettings = await store.getSettings();
     if(savedSettings) state.settings={...state.settings,...savedSettings};
     else if(cloudOK){ try{ await store.setSettings(state.settings); }catch(e){} } // 初期設定をクラウドに種まき（発表ページ用）
-    state.entries=(await store.allEntries()).sort((a,b)=>a.day-b.day);
+    state.entries=await loadEntriesDeduped();
   }catch(e){
     console.error('データ読み込み失敗',e);
     toast(cloudOK?'クラウドに接続できませんでした…ネットを確認':'保存機能が使えないかも');
@@ -1042,7 +1058,7 @@ async function afterLogin(){
   toast('引っ越し中…写真をアップロード中');
   for(const e of local){ try{ await Cloud.putEntry(e); }catch(err){ console.error(err); } }
   try{ const ls=await DB.getMeta('settings'); if(ls) state.settings={...state.settings,...ls}; await Cloud.setSettings(state.settings); }catch(e){}
-  state.entries=(await Cloud.allEntries()).sort((a,b)=>a.day-b.day);
+  state.entries=await loadEntriesDeduped();
   fillSettingsForm(); renderDash();
   toast('引っ越し完了！🎉 このURLをほかの端末でも開いてね');
 }
