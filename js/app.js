@@ -746,7 +746,11 @@ async function importJSON(file){
     if(!ok) return;
     toast('読みこみ中…（写真アップロード）');
     await store.clearEntries();
-    for(const e of data.entries) await store.putEntry(e);
+    // 新しいIDを生成して他ワークスペースのデータを上書きしないようにする
+    for(const e of data.entries){
+      const newId = 'e_'+(e.day||0)+'_'+performance.now().toString(36).replace('.','')+'_'+Math.random().toString(36).slice(2,6);
+      await store.putEntry({...e, id:newId});
+    }
     if(data.settings){ state.settings={...state.settings,...data.settings}; await store.setSettings(state.settings); }
     state.entries=await loadEntries();
     fillSettingsForm();
