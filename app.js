@@ -279,10 +279,10 @@ function renderDash(){
     const e=byDay[d];
     if(e){
       const ph=e.photos&&e.photos[0];
-      html+=`<div class="daycell done" data-edit="${e.id}">
+      html+=`<div class="daycell done" data-edit="${esc(e.id)}">
         <div class="dn">${d}日目</div>
         <div class="cleared">クリア!</div>
-        ${ph?`<img src="${ph}" alt="">`:''}
+        ${ph?`<img src="${esc(ph)}" alt="">`:''}
         <div class="cap">${esc(e.title||'（タイトルなし）')}</div>
       </div>`;
     }else{
@@ -328,7 +328,7 @@ function renderDraftPhotos(){
   const box=$('#photos');
   box.innerHTML = state.draftPhotos.map((d,i)=>`
     <div class="thumb">
-      <img src="${d}" alt="">
+      <img src="${esc(d)}" alt="">
       <button class="del" data-del="${i}" title="消す">✕</button>
       <div class="mv">
         <button data-mv="${i}:-1" title="まえへ">‹</button>
@@ -491,7 +491,7 @@ function buildSlides(){
     const sl=document.createElement('div'); sl.className='slide';
     const photos=(e.photos||[]).slice(0,4);
     let grid='1fr'; if(photos.length===2)grid='1fr 1fr'; if(photos.length===3)grid='2fr 1fr'; if(photos.length>=4)grid='1fr 1fr';
-    const shot = u => `<div class="shot"><span style="background-image:url('${u}')"></span><img src="${u}" alt=""></div>`;
+    const shot = u => `<div class="shot"><span style="background-image:url('${esc(u)}')"></span><img src="${esc(u)}" alt=""></div>`;
     const photoHTML = photos.length
       ? `<div class="big-photos" style="grid-template-columns:${grid}">${photos.map(shot).join('')}</div>`
       : `<div class="big-photos" style="place-items:center;font-size:12vmin">🍽️</div>`;
@@ -558,7 +558,7 @@ function openShareQR(){
   $('#qr-url').value = url;
   const img = makeQR(url);
   $('#qr-img-box').innerHTML = img
-    ? `<img src="${img}" alt="共有QRコード">`
+    ? `<img src="${esc(img)}" alt="共有QRコード">`
     : '<p class="muted">QRを作れませんでした</p>';
   $('#qr-modal').classList.add('show');
   SFX.click();
@@ -578,7 +578,7 @@ function dayPageHTML(e, dim){
   if(n===2){grid='1fr 1fr';} if(n===3){grid='1fr 1fr';rows='1fr 1fr';} if(n>=4){grid='1fr 1fr';rows='1fr 1fr';}
   const ph = n
     ? `<div class="p-photos" style="grid-template-columns:${grid};grid-auto-rows:1fr;flex:1;min-height:0">
-        ${photos.slice(0,4).map((p,i)=>`<img src="${p}" ${n===3&&i===0?'style="grid-row:span 2"':''}>`).join('')}
+        ${photos.slice(0,4).map((p,i)=>`<img src="${esc(p)}" ${n===3&&i===0?'style="grid-row:span 2"':''}>`).join('')}
        </div>`
     : `<div class="p-photos" style="flex:1;place-items:center;display:grid;font-size:30mm">🍽️</div>`;
   const ings=(e.ingredients||'').split('\n').map(x=>x.trim()).filter(Boolean);
@@ -612,7 +612,7 @@ function compactDayHTML(e){
   const ings=(e.ingredients||'').split('\n').map(x=>x.trim()).filter(Boolean);
   return `<div style="display:flex;gap:5mm;padding:4mm 0;border-bottom:1.5px dashed #ffd7b8;flex:1;min-height:0">
     <div style="flex:0 0 46%;border-radius:3mm;overflow:hidden;background:#f4f4f4;display:grid;place-items:center">
-      ${ph?`<img src="${ph}" style="width:100%;height:100%;object-fit:contain">`:`<div style="font-size:20mm">🍽️</div>`}
+      ${ph?`<img src="${esc(ph)}" style="width:100%;height:100%;object-fit:contain">`:`<div style="font-size:20mm">🍽️</div>`}
     </div>
     <div style="flex:1;display:flex;flex-direction:column;min-width:0">
       <div style="display:flex;justify-content:space-between;align-items:baseline">
@@ -648,7 +648,7 @@ function renderReport(){
         <div class="maintitle">${esc(s.title||'クッキングクエスト')}</div>
         <div class="sub">🔥 ${entries.length}日 クリア！ 🔥</div>
         <div class="byline">なまえ　<b>${esc(s.name||'　　　　')}</b><br>${esc(s.grade||'')}</div>
-        ${qrImg?`<div class="qr-box"><img src="${qrImg}" alt="発表ページQR"><div class="cap">📱 スマホ・iPadで読みとると<br>発表（スライド）がはじまるよ！</div></div>`:''}
+        ${qrImg?`<div class="qr-box"><img src="${esc(qrImg)}" alt="発表ページQR"><div class="cap">📱 スマホ・iPadで読みとると<br>発表（スライド）がはじまるよ！</div></div>`:''}
       </div>
     </div>`;
   }
@@ -756,7 +756,7 @@ function renderRecipes(){
   $('#recipe-count').textContent = RECIPES.length+'品';
   const cats = Object.keys(RECIPE_CATS);
   let chips = `<span class="chip catchip ${recipeCat==='all'?'on':''}" data-cat="all">🍽️ ぜんぶ</span>`;
-  chips += cats.map(k=>{const c=RECIPE_CATS[k]; return `<span class="chip catchip ${recipeCat===k?'on':''}" data-cat="${k}">${c.emoji} ${c.name}</span>`;}).join('');
+  chips += cats.map(k=>{const c=RECIPE_CATS[k]; return `<span class="chip catchip ${recipeCat===k?'on':''}" data-cat="${esc(k)}">${c.emoji} ${esc(c.name)}</span>`;}).join('');
   $('#recipe-cats').innerHTML = chips;
   const PH = window.RECIPE_PHOTOS||{};
   const list = RECIPES.filter(r=> recipeCat==='all' || r.c===recipeCat);
@@ -766,7 +766,8 @@ function renderRecipes(){
     const ph = PH[r.id];
     const photo = ph ? `<img class="photo" src="${esc(ph.img)}" alt="${esc(r.n)}" loading="lazy">` : '';
     const sparks = ph ? '' : `<div class="spark" style="top:13%;left:13%">✨</div><div class="spark" style="bottom:15%;right:12%;font-size:12px">⭐</div>`;
-    return `<div class="recipe-card" data-recipe="${r.id}">
+    const recipeId = esc(r.id);
+    return `<div class="recipe-card" data-recipe="${recipeId}">
       <div class="recipe-poster" style="background:linear-gradient(140deg,${c1},${c2})">
         ${photo}${sparks}
         <span class="lv">${'★'.repeat(r.lv)}</span>
