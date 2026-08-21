@@ -271,26 +271,26 @@ function renderDash(){
     `<div class="medal ${done>=m.n?'on':''}"><div class="em">${m.em}</div><div>${m.t}</div></div>`
   ).join('');
 
-  // カレンダーグリッド
-  const byDay={}; state.entries.forEach(e=>{ byDay[e.day]=e; });
-  const maxDay = Math.max(goal, ...state.entries.map(e=>e.day||0), 0);
-  let html='';
-  for(let d=1; d<=maxDay; d++){
-    const e=byDay[d];
-    if(e){
-      const ph=e.photos&&e.photos[0];
-      html+=`<div class="daycell done" data-edit="${esc(e.id)}">
-        <div class="dn">${d}日目</div>
-        <div class="cleared">クリア!</div>
-        ${ph?`<img src="${esc(ph)}" alt="">`:''}
-        <div class="cap">${esc(e.title||'（タイトルなし）')}</div>
-      </div>`;
-    }else{
-      html+=`<div class="daycell" data-new="${d}">
-        <div class="dn">${d}日目</div>
-        <div class="plus">＋</div>
-      </div>`;
-    }
+  // 日付順グリッド（表示は通し番号、同じ日付でもカウント増加）
+  const sorted = sortByDate(state.entries);
+  let html = '';
+  // 登録済みエントリを表示（通し番号は1から順にカウント）
+  sorted.forEach((e, i) => {
+    const dayNum = i + 1;
+    const ph = e.photos && e.photos[0];
+    html += `<div class="daycell done" data-edit="${esc(e.id)}">
+      <div class="dn">${dayNum}日目</div>
+      <div class="cleared">クリア!</div>
+      ${ph ? `<img src="${esc(ph)}" alt="">` : ''}
+      <div class="cap">${esc(e.title || '（タイトルなし）')}</div>
+    </div>`;
+  });
+  // 目標日数までの未登録分
+  for (let d = sorted.length + 1; d <= goal; d++) {
+    html += `<div class="daycell" data-new="1">
+      <div class="dn">${d}日目</div>
+      <div class="plus">＋</div>
+    </div>`;
   }
   $('#grid-days').innerHTML = html;
 }
@@ -342,10 +342,8 @@ let draftStars=5;
 function renderStars(){ $$('#stars span').forEach(s=>s.classList.toggle('on', +s.dataset.v<=draftStars)); }
 
 /* ---------------- フォーム：新規/編集 ---------------- */
-function openNewEntry(day){
+function openNewEntry(){
   state.editingId=null; state.draftPhotos=[]; draftStars=5;
-  const nextDay = day || (state.entries.length? Math.max(...state.entries.map(e=>e.day))+1 : 1);
-  $('#f-day').value=nextDay;
   $('#f-date').value=todayStr();
   $('#f-title').value=''; $('#f-ing').value=''; $('#f-steps').value=''; $('#f-note').value='';
   $('#f-yum').value='😋 おいしい';
@@ -356,31 +354,29 @@ function openNewEntry(day){
   show('entry');
 }
 function openEditEntry(id){
-  const e=state.entries.find(x=>x.id===id); if(!e) return;
+  const sorted = sortByDate(state.entries);
+  const idx = sorted.findIndex(x=>x.id===id); if(idx<0) return;
+  const e = sorted[idx];
+  const dayNum = idx + 1;
   state.editingId=id; state.draftPhotos=[...(e.photos||[])]; draftStars=e.stars||5;
-  $('#f-day').value=e.day; $('#f-date').value=e.date||todayStr();
+  $('#f-date').value=e.date||todayStr();
   $('#f-title').value=e.title||''; $('#f-ing').value=e.ingredients||'';
   $('#f-steps').value=e.steps||''; $('#f-note').value=e.note||'';
   $('#f-yum').value=e.yum||'😋 おいしい';
-  $('#entry-head').textContent=`${e.day}日目 を なおす`;
+  $('#entry-head').textContent=`${dayNum}日目 を なおす`;
   $('#entry-delete').style.display='inline-block';
   $('#entry-cancel').style.display='inline-block';
   renderDraftPhotos(); renderStars();
   show('entry');
 }
 async function saveEntry(){
-  const day=parseInt($('#f-day').value,10)||1;
   const title=$('#f-title').value.trim();
   if(!title && state.draftPhotos.length===0){
     toast('タイトルか写真を1つは入れてね！'); return;
   }
-  // 同じ日が既にある（別ID）なら上書き確認
-  const dup = state.entries.find(e=>e.day===day && e.id!==state.editingId);
-  if(dup && !state.editingId){
-    const ok = await confirmModal(`${day}日目 はもうあるよ`,'その日を上書き（なおす）しますか？');
-    if(!ok) return;
-    state.editingId=dup.id;
-  }
+  // 新規登録時は通し番号を自動設定、編集時は既存のdayを維持
+  const existingEntry = state.entries.find(e=>e.id===state.editingId);
+  const day = existingEntry ? existingEntry.day : (state.entries.length + 1);
   const entry = {
     id: state.editingId || ('e_'+day+'_'+performance.now().toString(36).replace('.','')),
     day, date:$('#f-date').value||todayStr(),
@@ -400,7 +396,7 @@ async function saveEntry(){
   saveBtn.disabled=false; saveBtn.textContent=oldLabel;
   const idx=state.entries.findIndex(e=>e.id===saved.id);
   if(idx>=0) state.entries[idx]=saved; else state.entries.push(saved);
-  state.entries=dedupeByDay(state.entries).kept;
+  state.entries=sortByDate(state.entries);
 
   SFX.save(); confetti();
   const afterCleared = Math.min(state.entries.length, state.settings.goal);
@@ -442,27 +438,20 @@ function confirmModal(title, body){
 }
 
 /* ================= 発表スライド ================= */
-/* ---------------- 同じ日の重複をまとめる（新しい方を残す） ---------------- */
-function dedupeByDay(list){
-  const sorted=[...list].sort((a,b)=>(a.day-b.day)||((a.createdAt||0)-(b.createdAt||0)));
-  const byDay=new Map(), losers=[];
-  for(const e of sorted){ if(byDay.has(e.day)) losers.push(byDay.get(e.day)); byDay.set(e.day,e); }
-  return { kept:[...byDay.values()].sort((a,b)=>a.day-b.day), losers };
+/* ---------------- 日付順にソート（date昇順、同日はcreatedAt昇順） ---------------- */
+function sortByDate(list){
+  return [...list].sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.createdAt||0)-(b.createdAt||0));
 }
-// クラウド/ローカルから読み込み → 重複を除外（クラウドは重複行もお掃除）
-async function loadEntriesDeduped(){
-  const { kept, losers } = dedupeByDay(await store.allEntries());
-  if(store===Cloud && losers.length){
-    for(const e of losers){ try{ await Cloud.delEntry(e.id); }catch(_){} }
-  }
-  return kept;
+// クラウド/ローカルから読み込み → 日付順にソート
+async function loadEntries(){
+  return sortByDate(await store.allEntries());
 }
 
 let slideIdx=0, slideEls=[];
 function buildSlides(){
   const s=state.settings;
   const wrap=$('#slides'); wrap.innerHTML='';
-  const entries=dedupeByDay(state.entries).kept;
+  const entries=sortByDate(state.entries);
 
   // 表紙
   const cover=document.createElement('div');
@@ -486,8 +475,9 @@ function buildSlides(){
     wrap.appendChild(intro);
   }
 
-  // 各日
-  entries.forEach(e=>{
+  // 各日（通し番号で表示）
+  entries.forEach((e, idx)=>{
+    const dayNum = idx + 1;
     const sl=document.createElement('div'); sl.className='slide';
     const photos=(e.photos||[]).slice(0,4);
     let grid='1fr'; if(photos.length===2)grid='1fr 1fr'; if(photos.length===3)grid='2fr 1fr'; if(photos.length>=4)grid='1fr 1fr';
@@ -497,7 +487,7 @@ function buildSlides(){
       : `<div class="big-photos" style="place-items:center;font-size:12vmin">🍽️</div>`;
     const stars='⭐'.repeat(e.stars||0);
     sl.innerHTML=`
-      <div class="kicker">${e.day}日目 ・ ${esc(fmtDate(e.date))}</div>
+      <div class="kicker">${dayNum}日目 ・ ${esc(fmtDate(e.date))}</div>
       <h1>${esc(e.title||'（タイトルなし）')}</h1>
       ${photoHTML}
       <div class="meta">
@@ -571,7 +561,7 @@ function makeQR(text){
   catch(e){ console.warn('QR失敗',e); return null; }
 }
 
-function dayPageHTML(e, dim){
+function dayPageHTML(e, dim, dayNum){
   const photos=e.photos||[];
   let grid='1fr', rows='1fr';
   const n=Math.min(photos.length,4);
@@ -584,7 +574,7 @@ function dayPageHTML(e, dim){
   const ings=(e.ingredients||'').split('\n').map(x=>x.trim()).filter(Boolean);
   return `
    <div class="pad">
-     <div class="p-head"><div class="dnum">${e.day}日目</div><div class="pdate">${esc(fmtDate(e.date))}</div></div>
+     <div class="p-head"><div class="dnum">${dayNum}日目</div><div class="pdate">${esc(fmtDate(e.date))}</div></div>
      <h3 class="p-title">${esc(e.title||'（タイトルなし）')}</h3>
      ${ph}
      <div class="p-body">
@@ -607,7 +597,7 @@ function dayPageHTML(e, dim){
      </div>
    </div>`;
 }
-function compactDayHTML(e){
+function compactDayHTML(e, dayNum){
   const ph=(e.photos||[])[0];
   const ings=(e.ingredients||'').split('\n').map(x=>x.trim()).filter(Boolean);
   return `<div style="display:flex;gap:5mm;padding:4mm 0;border-bottom:1.5px dashed #ffd7b8;flex:1;min-height:0">
@@ -616,7 +606,7 @@ function compactDayHTML(e){
     </div>
     <div style="flex:1;display:flex;flex-direction:column;min-width:0">
       <div style="display:flex;justify-content:space-between;align-items:baseline">
-        <b style="color:#ff5a1f;font-size:5mm">${e.day}日目</b><span style="color:#777;font-size:3.4mm">${esc(fmtDate(e.date))}</span>
+        <b style="color:#ff5a1f;font-size:5mm">${dayNum}日目</b><span style="color:#777;font-size:3.4mm">${esc(fmtDate(e.date))}</span>
       </div>
       <div style="font-size:6mm;font-weight:900;margin:1mm 0 2mm">${esc(e.title||'')}</div>
       <div style="font-size:3.4mm;color:#333;line-height:1.5"><b>材料：</b>${esc(ings.join('、')||'—')}</div>
@@ -671,12 +661,12 @@ function renderReport(){
     for(let i=0;i<entries.length;i+=2){
       html+=`<div class="paper" style="${paperStyle}"><div class="pad">
         <div class="p-head"><div class="dnum" style="font-size:5mm">${esc(s.title||'おひるごはん記録')}</div><div class="pdate">${esc(s.name||'')}</div></div>
-        ${compactDayHTML(entries[i])}
-        ${entries[i+1]?compactDayHTML(entries[i+1]):''}
+        ${compactDayHTML(entries[i], i+1)}
+        ${entries[i+1]?compactDayHTML(entries[i+1], i+2):''}
       </div></div>`;
     }
   }else{
-    entries.forEach(e=>{ html+=`<div class="paper" style="${paperStyle}">${dayPageHTML(e)}</div>`; });
+    entries.forEach((e, idx)=>{ html+=`<div class="paper" style="${paperStyle}">${dayPageHTML(e, null, idx+1)}</div>`; });
   }
 
   if(withDocs && s.summary && s.summary.trim()){
@@ -729,7 +719,7 @@ async function importJSON(file){
     await store.clearEntries();
     for(const e of data.entries) await store.putEntry(e);
     if(data.settings){ state.settings={...state.settings,...data.settings}; await store.setSettings(state.settings); }
-    state.entries=await loadEntriesDeduped();
+    state.entries=await loadEntries();
     fillSettingsForm();
     toast('読みこんだよ！ ✅'); show('dash');
   }catch(e){ console.error(e); toast('読みこめませんでした…'); }
@@ -888,7 +878,7 @@ async function loadDemo(){
     const e={id:'demo_'+day+'_'+i,day,date:todayStr(),...d};
     const se=await store.putEntry(e); state.entries.push(se);
   }
-  state.entries=dedupeByDay(state.entries).kept;
+  state.entries=sortByDate(state.entries);
   toast('デモを入れたよ 🧪'); show('dash');
 }
 async function resetAll(){
@@ -929,7 +919,7 @@ function wire(){
   $('#grid-days').addEventListener('click',e=>{
     const cell=e.target.closest('.daycell'); if(!cell)return;
     if(cell.dataset.edit) openEditEntry(cell.dataset.edit);
-    else if(cell.dataset.new) openNewEntry(+cell.dataset.new);
+    else if(cell.dataset.new) openNewEntry();
   });
   $('#quick-add').addEventListener('click',()=>openNewEntry());
 
@@ -1030,7 +1020,7 @@ async function boot(){
     const savedSettings = await store.getSettings();
     if(savedSettings) state.settings={...state.settings,...savedSettings};
     else if(cloudOK){ try{ await store.setSettings(state.settings); }catch(e){} } // 初期設定をクラウドに種まき（発表ページ用）
-    state.entries=await loadEntriesDeduped();
+    state.entries=await loadEntries();
   }catch(e){
     console.error('データ読み込み失敗',e);
     toast(cloudOK?'クラウドに接続できませんでした…ネットを確認':'保存機能が使えないかも');
@@ -1059,7 +1049,7 @@ async function afterLogin(){
   toast('引っ越し中…写真をアップロード中');
   for(const e of local){ try{ await Cloud.putEntry(e); }catch(err){ console.error(err); } }
   try{ const ls=await DB.getMeta('settings'); if(ls) state.settings={...state.settings,...ls}; await Cloud.setSettings(state.settings); }catch(e){}
-  state.entries=await loadEntriesDeduped();
+  state.entries=await loadEntries();
   fillSettingsForm(); renderDash();
   toast('引っ越し完了！🎉 このURLをほかの端末でも開いてね');
 }
@@ -1114,11 +1104,11 @@ const S=D.settings,E=D.entries.slice().sort((a,b)=>a.day-b.day);
 let slides=[];
 slides.push('<div class="sl cover"><div class="plate">🍽️</div><div class="k">じゆうけんきゅう / COOKING QUEST</div><h1>'+esc(S.title||'')+'</h1><div class="m" style="justify-content:center"><div class="b"><b>なまえ</b> '+esc(S.name||'')+'</div><div class="b"><b>クラス</b> '+esc(S.grade||'')+'</div><div class="b"><b>クリア</b> '+E.length+'日</div></div></div>');
 if(S.intro&&S.intro.trim())slides.push('<div class="sl"><div class="k">はじめに</div><h1>なぜ やろうと思ったか 💡</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.intro)+'</div></div></div>');
-E.forEach(e=>{const p=(e.photos||[]).slice(0,4);let g='1fr';if(p.length===2)g='1fr 1fr';if(p.length===3)g='2fr 1fr';if(p.length>=4)g='1fr 1fr';
+E.forEach((e,idx)=>{const dayNum=idx+1;const p=(e.photos||[]).slice(0,4);let g='1fr';if(p.length===2)g='1fr 1fr';if(p.length===3)g='2fr 1fr';if(p.length>=4)g='1fr 1fr';
 const shot=x=>'<div class="shot"><span style="background-image:url(\''+x+'\')"></span><img src="'+x+'"></div>';
 const ph=p.length?'<div class="ph" style="grid-template-columns:'+g+'">'+p.map(shot).join('')+'</div>':'<div class="ph" style="place-items:center;font-size:12vmin">🍽️</div>';
 const st='⭐'.repeat(e.stars||0);
-slides.push('<div class="sl"><div class="k">'+e.day+'日目 ・ '+esc(fd(e.date))+'</div><h1>'+esc(e.title||'')+'</h1>'+ph+'<div class="m">'+(e.ingredients?'<div class="b"><b>材料</b> '+esc((e.ingredients||'').split("\\n").filter(Boolean).join("、"))+'</div>':'')+(e.yum?'<div class="b">'+esc(e.yum)+'</div>':'')+(st?'<div class="b">'+st+'</div>':'')+(e.note?'<div class="b"><b>ひとこと</b> '+esc(e.note)+'</div>':'')+'</div></div>');});
+slides.push('<div class="sl"><div class="k">'+dayNum+'日目 ・ '+esc(fd(e.date))+'</div><h1>'+esc(e.title||'')+'</h1>'+ph+'<div class="m">'+(e.ingredients?'<div class="b"><b>材料</b> '+esc((e.ingredients||'').split("\\n").filter(Boolean).join("、"))+'</div>':'')+(e.yum?'<div class="b">'+esc(e.yum)+'</div>':'')+(st?'<div class="b">'+st+'</div>':'')+(e.note?'<div class="b"><b>ひとこと</b> '+esc(e.note)+'</div>':'')+'</div></div>');});
 if(S.summary&&S.summary.trim())slides.push('<div class="sl"><div class="k">まとめ</div><h1>やってみて わかったこと 🏁</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.summary)+'</div></div></div>');
 slides.push('<div class="sl cover"><div class="plate">🎉</div><h1>おわり</h1><div class="k">みてくれて ありがとう！</div></div>');
 document.getElementById('s').innerHTML=slides.join('');

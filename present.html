@@ -49,11 +49,11 @@ function build(S,E){
   slides=[];
   slides.push('<div class="sl cover"><div class="plate">🍽️</div><div class="k">じゆうけんきゅう / COOKING QUEST</div><h1>'+esc(S.title||'')+'</h1><div class="m" style="justify-content:center"><div class="b"><b>なまえ</b> '+esc(S.name||'')+'</div><div class="b"><b>クラス</b> '+esc(S.grade||'')+'</div><div class="b"><b>クリア</b> '+E.length+'日</div></div></div>');
   if(S.intro&&S.intro.trim())slides.push('<div class="sl"><div class="k">はじめに</div><h1>なぜ やろうと思ったか 💡</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.intro)+'</div></div></div>');
-  E.forEach(e=>{const p=(e.photos||[]).slice(0,4);let g='1fr';if(p.length===2)g='1fr 1fr';if(p.length===3)g='2fr 1fr';if(p.length>=4)g='1fr 1fr';
+  E.forEach((e,idx)=>{const dayNum=idx+1;const p=(e.photos||[]).slice(0,4);let g='1fr';if(p.length===2)g='1fr 1fr';if(p.length===3)g='2fr 1fr';if(p.length>=4)g='1fr 1fr';
    const shot=x=>'<div class="shot"><span style="background-image:url(\''+esc(x)+'\')"></span><img src="'+esc(x)+'"></div>';
    const ph=p.length?'<div class="ph" style="grid-template-columns:'+g+'">'+p.map(shot).join('')+'</div>':'<div class="ph" style="place-items:center;font-size:12vmin">🍽️</div>';
    const st='⭐'.repeat(e.stars||0);
-   slides.push('<div class="sl"><div class="k">'+e.day+'日目 ・ '+esc(fd(e.date))+'</div><h1>'+esc(e.title||'')+'</h1>'+ph+'<div class="m">'+(e.ingredients?'<div class="b"><b>材料</b> '+esc((e.ingredients||'').split("\n").filter(Boolean).join("、"))+'</div>':'')+(e.yum?'<div class="b">'+esc(e.yum)+'</div>':'')+(st?'<div class="b">'+st+'</div>':'')+(e.note?'<div class="b"><b>ひとこと</b> '+esc(e.note)+'</div>':'')+'</div></div>');});
+   slides.push('<div class="sl"><div class="k">'+dayNum+'日目 ・ '+esc(fd(e.date))+'</div><h1>'+esc(e.title||'')+'</h1>'+ph+'<div class="m">'+(e.ingredients?'<div class="b"><b>材料</b> '+esc((e.ingredients||'').split("\n").filter(Boolean).join("、"))+'</div>':'')+(e.yum?'<div class="b">'+esc(e.yum)+'</div>':'')+(st?'<div class="b">'+st+'</div>':'')+(e.note?'<div class="b"><b>ひとこと</b> '+esc(e.note)+'</div>':'')+'</div></div>');});
   if(S.summary&&S.summary.trim())slides.push('<div class="sl"><div class="k">まとめ</div><h1>やってみて わかったこと 🏁</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.summary)+'</div></div></div>');
   slides.push('<div class="sl cover"><div class="plate">🎉</div><h1>おわり</h1><div class="k">みてくれて ありがとう！</div></div>');
   document.getElementById('s').innerHTML=slides.join('');
