@@ -321,12 +321,34 @@ function fileToResizedDataURL(file, maxSide=1600, quality=0.85){
   });
 }
 async function addPhotoFiles(files){
-  const list=[...files].filter(f=>f.type.startsWith('image/'));
-  if(!list.length) return;
-  toast(`写真を読みこみ中…（${list.length}枚）`);
-  for(const f of list){
-    try{ const d=await fileToResizedDataURL(f); state.draftPhotos.push(d); }
-    catch(e){ console.error(e); toast('1枚読みこめませんでした'); }
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+  const MAX_PHOTOS = 4; // 1記録あたり最大4枚
+
+  const list = [...files].filter(f => {
+    if (!f.type.startsWith('image/')) return false;
+    if (f.size > MAX_SIZE) {
+      toast(`写真が大きすぎます（10MB以下にしてね）`);
+      return false;
+    }
+    return true;
+  });
+  if (!list.length) return;
+
+  const canAdd = MAX_PHOTOS - state.draftPhotos.length;
+  if (canAdd <= 0) {
+    toast(`写真は${MAX_PHOTOS}枚までだよ`);
+    return;
+  }
+  const toAdd = list.slice(0, canAdd);
+  if (toAdd.length < list.length) {
+    toast(`${MAX_PHOTOS}枚まで！ ${toAdd.length}枚だけ読みこむね`);
+  } else {
+    toast(`写真を読みこみ中…（${toAdd.length}枚）`);
+  }
+
+  for (const f of toAdd) {
+    try { const d = await fileToResizedDataURL(f); state.draftPhotos.push(d); }
+    catch (e) { console.error(e); toast('1枚読みこめませんでした'); }
   }
   renderDraftPhotos();
   SFX.click();
