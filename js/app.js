@@ -247,7 +247,6 @@ function renderDash(){
   const goal = s.goal||20;
   const done = state.entries.length;
   const cleared = Math.min(done, goal);
-  $('#ring-goal').textContent = goal;
   $('#ring-num').textContent = done;
 
   // リング

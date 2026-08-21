@@ -355,15 +355,9 @@ h2.section {
 }
 
 .ring .num b {
-  font-size: 40px;
+  font-size: 32px;
+  font-weight: 900;
   line-height: 1;
-  display: block;
-}
-
-.ring .num span {
-  font-size: 12px;
-  color: var(--sub);
-  font-weight: 800;
 }
 
 /* バッジ */
