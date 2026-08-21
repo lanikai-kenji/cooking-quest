@@ -4,25 +4,6 @@
    ========================================================= */
 
 /* ==========================================================
-   フォント定義
-   ========================================================== */
-@font-face {
-  font-family: 'PixelMplus';
-  src: url('fonts/PixelMplus12-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'PixelMplus';
-  src: url('fonts/PixelMplus12-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ==========================================================
    CSS変数（カラーパレット・共通値）
    ========================================================== */
 :root {
@@ -50,7 +31,6 @@
   --radius: 20px;
   --shadow: 0 12px 40px rgba(0, 0, 0, .45);
   --font: system-ui, -apple-system, "Hiragino Maru Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
-  --font-pixel: 'PixelMplus', monospace;
 }
 
 /* ==========================================================
@@ -67,7 +47,7 @@ html, body {
 }
 
 body {
-  font-family: var(--font-pixel);
+  font-family: var(--font);
   color: var(--ink);
   background:
     radial-gradient(1200px 600px at 80% -10%, rgba(138, 92, 255, .25), transparent 60%),
@@ -113,7 +93,7 @@ input, textarea, select {
   gap: 12px;
   font-weight: 900;
   letter-spacing: .5px;
-  font-family: var(--font-pixel);
+  font-family: var(--font);
 }
 
 .brand .logo {

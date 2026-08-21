@@ -1,9 +1,9 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>2026年夏休み自由研究: クッキングクエスト🔥</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:system-ui,-apple-system,"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:#0b1020;color:#eef2ff;overflow:hidden}
@@ -36,8 +36,8 @@ h1{font-size:clamp(30px,7vmin,74px);margin:.2em 0;line-height:1.05}
 <div id="s" class="hide"></div>
 <div class="bar hide" id="bar"><button onclick="go(i-1)">←</button><div class="no" id="no"></div><div class="prog"><i id="pi"></i></div><button onclick="fs()">⛶</button><button onclick="go(i+1)">→</button></div>
 
-<script src="supabase.js"></script>
-<script src="cloud-config.js"></script>
+<script src="lib/supabase.js"></script>
+<script src="js/cloud-config.js"></script>
 <script>
 const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nl=s=>esc(s).replace(/\n/g,'<br>');

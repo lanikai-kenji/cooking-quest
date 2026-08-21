@@ -1,7 +1,7 @@
 /* 自動生成: レシピ写真とクレジット（フリー素材 / Openverse経由 CC0・PDM・CC-BY等） */
 window.RECIPE_PHOTOS = {
  "r01": {
-  "img": "photos/r01.jpg",
+  "img": "assets/photos/r01.jpg",
   "title": "Insides - Omurice - Satsuki",
   "creator": "avlxyz",
   "license": "BY-SA",
@@ -11,7 +11,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r02": {
-  "img": "photos/r02.jpg",
+  "img": "assets/photos/r02.jpg",
   "title": "Green Lettuce - Chicken Masala Fried Rice - Roland in Vancouver 2367",
   "creator": "roland",
   "license": "CC0",
@@ -21,7 +21,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r03": {
-  "img": "photos/r03.jpg",
+  "img": "assets/photos/r03.jpg",
   "title": "Salmon & Tuna Poke Bowl (M) with Spicy Mayo sauce - Kitokito 2025-04-25",
   "creator": "Andy Li",
   "license": "CC0",
@@ -31,7 +31,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r04": {
-  "img": "photos/r04.jpg",
+  "img": "assets/photos/r04.jpg",
   "title": "Takana Soboro Rice Bowl",
   "creator": "junyaogura",
   "license": "BY",
@@ -41,7 +41,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r05": {
-  "img": "photos/r05.jpg",
+  "img": "assets/photos/r05.jpg",
   "title": "Yaki Onigiri",
   "creator": "Vegan Feast Catering",
   "license": "BY",
@@ -49,7 +49,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/25128194@N02/4403356892"
  },
  "r06": {
-  "img": "photos/r06.jpg",
+  "img": "assets/photos/r06.jpg",
   "title": "Pork and tamago onigiri 001",
   "creator": "Ocdp",
   "license": "CC0",
@@ -59,7 +59,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r07": {
-  "img": "photos/r07.jpg",
+  "img": "assets/photos/r07.jpg",
   "title": "Beef curry rice 003",
   "creator": "Ocdp",
   "license": "CC0",
@@ -69,7 +69,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r08": {
-  "img": "photos/r08.jpg",
+  "img": "assets/photos/r08.jpg",
   "title": "Oyako Don - Satsuki AUD12",
   "creator": "avlxyz",
   "license": "BY-SA",
@@ -79,7 +79,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r09": {
-  "img": "photos/r09.jpg",
+  "img": "assets/photos/r09.jpg",
   "title": "Chicken rice plate",
   "creator": "_Yuki_K_",
   "license": "BY",
@@ -89,7 +89,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r10": {
-  "img": "photos/r10.jpg",
+  "img": "assets/photos/r10.jpg",
   "title": "Century Egg, Jellyfish, Chicken Congee - Wonton House Swanston AUD8.90",
   "creator": "avlxyz",
   "license": "BY-SA",
@@ -99,7 +99,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r11": {
-  "img": "photos/r11.jpg",
+  "img": "assets/photos/r11.jpg",
   "title": "Foods at Brunswick Festival 2023-08-20",
   "creator": "Andy Li",
   "license": "CC0",
@@ -109,7 +109,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r12": {
-  "img": "photos/r12.jpg",
+  "img": "assets/photos/r12.jpg",
   "title": "Making Haitian spaghetti 3",
   "creator": "Valereee",
   "license": "CC0",
@@ -119,7 +119,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r13": {
-  "img": "photos/r13.jpg",
+  "img": "assets/photos/r13.jpg",
   "title": "Hiyashi Chuka",
   "creator": "nonrev",
   "license": "BY-SA",
@@ -129,7 +129,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r14": {
-  "img": "photos/r14.jpg",
+  "img": "assets/photos/r14.jpg",
   "title": "Nabeyaki Udon - Makoto, Sydney AUD8.80",
   "creator": "avlxyz",
   "license": "BY-SA",
@@ -139,7 +139,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r15": {
-  "img": "photos/r15.jpg",
+  "img": "assets/photos/r15.jpg",
   "title": "Curry Udon Noodle",
   "creator": "rhosoi",
   "license": "BY",
@@ -149,7 +149,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r16": {
-  "img": "photos/r16.jpg",
+  "img": "assets/photos/r16.jpg",
   "title": "shiso flavor spaghetti with cod roe",
   "creator": "Takanori Ishikawa",
   "license": "BY",
@@ -159,7 +159,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r17": {
-  "img": "photos/r17.jpg",
+  "img": "assets/photos/r17.jpg",
   "title": "Spaghetti Aglio, Olio e Peperoncino（ペペロンチーノ）",
   "creator": "kawanet",
   "license": "BY",
@@ -169,7 +169,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r18": {
-  "img": "photos/r18.jpg",
+  "img": "assets/photos/r18.jpg",
   "title": "Thai Sesame Somen with Peanut",
   "creator": "Vegan Feast Catering",
   "license": "BY",
@@ -179,7 +179,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r19": {
-  "img": "photos/r19.jpg",
+  "img": "assets/photos/r19.jpg",
   "title": "今天點醬油拉麵200元/碗，豬雞混合湯頭濃郁中帶點清爽，麵條粗硬適中，不過，聽友人說這不算道地口味，有點打槍，但想吃還是可以來啦～對啦！這裡的水質真的不行，第一",
   "creator": "haylei wu",
   "license": "PDM",
@@ -189,7 +189,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r20": {
-  "img": "photos/r20.jpg",
+  "img": "assets/photos/r20.jpg",
   "title": "Stuffed French Toast",
   "creator": "palewire",
   "license": "CC0",
@@ -199,7 +199,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r21": {
-  "img": "photos/r21.jpg",
+  "img": "assets/photos/r21.jpg",
   "title": "Pizza Bread with Polly-O",
   "creator": "ChrisGampat",
   "license": "BY",
@@ -209,7 +209,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r22": {
-  "img": "photos/r22.jpg",
+  "img": "assets/photos/r22.jpg",
   "title": "Grilled Cheese Sandwich",
   "creator": "",
   "license": "CC0",
@@ -219,7 +219,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r23": {
-  "img": "photos/r23.jpg",
+  "img": "assets/photos/r23.jpg",
   "title": "Egg sandwich",
   "creator": "Wallboat",
   "license": "CC0",
@@ -229,7 +229,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r24": {
-  "img": "photos/r24.jpg",
+  "img": "assets/photos/r24.jpg",
   "title": "Tuna Sandwich",
   "creator": "Dennis S. Hurd",
   "license": "CC0",
@@ -239,7 +239,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r25": {
-  "img": "photos/r25.jpg",
+  "img": "assets/photos/r25.jpg",
   "title": "BBQ Chicken Pizza",
   "creator": "Cole Kennedy",
   "license": "PDM",
@@ -249,7 +249,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r26": {
-  "img": "photos/r26.jpg",
+  "img": "assets/photos/r26.jpg",
   "title": "Beef hot dog",
   "creator": "Jakub Kapusnak",
   "license": "CC0",
@@ -259,7 +259,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r27": {
-  "img": "photos/r27.jpg",
+  "img": "assets/photos/r27.jpg",
   "title": "Cheese Toast Smiley",
   "creator": "cogdogblog",
   "license": "CC0",
@@ -269,7 +269,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r28": {
-  "img": "photos/r28.jpg",
+  "img": "assets/photos/r28.jpg",
   "title": "Fried egg",
   "creator": "jlcampbell104",
   "license": "PDM",
@@ -279,7 +279,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r29": {
-  "img": "photos/r29.jpg",
+  "img": "assets/photos/r29.jpg",
   "title": "Tamagoyaki",
   "creator": "WordRidden",
   "license": "BY",
@@ -289,7 +289,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r30": {
-  "img": "photos/r30.jpg",
+  "img": "assets/photos/r30.jpg",
   "title": "Free cooking sausages image",
   "creator": "",
   "license": "CC0",
@@ -299,7 +299,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r31": {
-  "img": "photos/r31.jpg",
+  "img": "assets/photos/r31.jpg",
   "title": "Classic Chicken Karaage - Sunoso 2023-11-28",
   "creator": "Andy Li",
   "license": "CC0",
@@ -309,7 +309,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r32": {
-  "img": "photos/r32.jpg",
+  "img": "assets/photos/r32.jpg",
   "title": "Grilled Salmon",
   "creator": "chooyutshing",
   "license": "PDM",
@@ -319,7 +319,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r33": {
-  "img": "photos/r33.jpg",
+  "img": "assets/photos/r33.jpg",
   "title": "Hamburger steak",
   "creator": "clvs7",
   "license": "CC0",
@@ -329,7 +329,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r34": {
-  "img": "photos/r34.jpg",
+  "img": "assets/photos/r34.jpg",
   "title": "Nikumaki Onigiri at Izakaya Roku",
   "creator": "Gary Soup",
   "license": "BY",
@@ -337,7 +337,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/87117631@N00/8095734853"
  },
  "r35": {
-  "img": "photos/r35.jpg",
+  "img": "assets/photos/r35.jpg",
   "title": "bukkake udon with chicken and chikuwa tempura at oniyanma, kichijoji",
   "creator": "nakashi",
   "license": "BY-SA",
@@ -345,7 +345,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/81497476@N00/52240164781"
  },
  "r36": {
-  "img": "photos/r36.jpg",
+  "img": "assets/photos/r36.jpg",
   "title": "Bacon and eggs 001",
   "creator": "Ocdp",
   "license": "CC0",
@@ -355,7 +355,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r37": {
-  "img": "photos/r37.jpg",
+  "img": "assets/photos/r37.jpg",
   "title": "Pan-fried gyoza dumplings with lightly crisped bottoms, arranged on a black cera",
   "creator": "Uttkrista Chhetri",
   "license": "CC0",
@@ -365,7 +365,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r38": {
-  "img": "photos/r38.jpg",
+  "img": "assets/photos/r38.jpg",
   "title": "Free sausage mash, peas white",
   "creator": "",
   "license": "CC0",
@@ -375,7 +375,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r39": {
-  "img": "photos/r39.jpg",
+  "img": "assets/photos/r39.jpg",
   "title": "Parmesan and Fontina Cheese Omelette - Cafe a Taglio, St Kilda",
   "creator": "avlxyz",
   "license": "BY-SA",
@@ -385,7 +385,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r40": {
-  "img": "photos/r40.jpg",
+  "img": "assets/photos/r40.jpg",
   "title": "Miso soup at Sushi Bay Cafe - Roland in Vancouver 2344",
   "creator": "roland",
   "license": "CC0",
@@ -395,7 +395,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r41": {
-  "img": "photos/r41.jpg",
+  "img": "assets/photos/r41.jpg",
   "title": "Summer corn soup",
   "creator": "tom.oeste",
   "license": "PDM",
@@ -405,7 +405,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r42": {
-  "img": "photos/r42.jpg",
+  "img": "assets/photos/r42.jpg",
   "title": "Shio Wakame Ramen - Momotaro Rahmen AUD10 - by Julia",
   "creator": "avlxyz",
   "license": "BY-SA",
@@ -415,7 +415,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r43": {
-  "img": "photos/r43.jpg",
+  "img": "assets/photos/r43.jpg",
   "title": "Monday Lunch Egg Drop Soup with Tomatoes & Vegetables",
   "creator": "Gary Lee Todd, Ph.D.",
   "license": "CC0",
@@ -425,7 +425,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r44": {
-  "img": "photos/r44.jpg",
+  "img": "assets/photos/r44.jpg",
   "title": "Potato Salad at Transylvania Flavour",
   "creator": "roland",
   "license": "CC0",
@@ -435,7 +435,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r45": {
-  "img": "photos/r45.jpg",
+  "img": "assets/photos/r45.jpg",
   "title": "Grandma's Macaroni Salad",
   "creator": "Alabama Extension",
   "license": "CC0",
@@ -445,7 +445,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r46": {
-  "img": "photos/r46.jpg",
+  "img": "assets/photos/r46.jpg",
   "title": "Sweet corn + butter = oishii :) www.thriftylook.com #food #foodporn #instafood #",
   "creator": "Thrifty Look",
   "license": "BY",
@@ -455,7 +455,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm,by,by-sa"
  },
  "r47": {
-  "img": "photos/r47.jpg",
+  "img": "assets/photos/r47.jpg",
   "title": "Fresh cucumber salad with herbs on a white plate, garnished with sliced cucumber",
   "creator": "Jackson Monichan",
   "license": "CC0",
@@ -465,7 +465,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r48": {
-  "img": "photos/r48.jpg",
+  "img": "assets/photos/r48.jpg",
   "title": "Pancakes Syrup",
   "creator": "Altered Reality",
   "license": "CC0",
@@ -475,7 +475,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r49": {
-  "img": "photos/r49.jpg",
+  "img": "assets/photos/r49.jpg",
   "title": "Okonomiyaki, Tokyo",
   "creator": "Cecile Diener",
   "license": "CC0",
@@ -485,7 +485,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r50": {
-  "img": "photos/r50.jpg",
+  "img": "assets/photos/r50.jpg",
   "title": "Takoyaki",
   "creator": "manchesterunitedbowie",
   "license": "PDM",
@@ -495,7 +495,7 @@ window.RECIPE_PHOTOS = {
   "lic": "cc0,pdm"
  },
  "r51": {
-  "img": "photos/r51.jpg",
+  "img": "assets/photos/r51.jpg",
   "title": "Kimchi Beef Udon at Bay Sushi Cafe - Roland in Vancouver 2082",
   "creator": "roland",
   "license": "CC0",
@@ -503,7 +503,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/35034347371@N01/138568275"
  },
  "r52": {
-  "img": "photos/r52.jpg",
+  "img": "assets/photos/r52.jpg",
   "title": "Vegetable udon noodle soup",
   "creator": "Jennifer",
   "license": "BY",
@@ -511,7 +511,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://commons.wikimedia.org/w/index.php?curid=34968433"
  },
  "r53": {
-  "img": "photos/r53.jpg",
+  "img": "assets/photos/r53.jpg",
   "title": "20260425 Tsukimi Udon Restaurant Yoshi Hoan in Ikaruga Japan anagoria",
   "creator": "anagoria",
   "license": "BY-SA",
@@ -519,7 +519,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://commons.wikimedia.org/w/index.php?curid=190441581"
  },
  "r54": {
-  "img": "photos/r54.jpg",
+  "img": "assets/photos/r54.jpg",
   "title": "Stir-fried noodles (Yaki-udon)",
   "creator": "pelican",
   "license": "BY-SA",
@@ -527,7 +527,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/85936780@N00/2320197071"
  },
  "r55": {
-  "img": "photos/r55.jpg",
+  "img": "assets/photos/r55.jpg",
   "title": "carbonara udon last night was delicious, thanks okasan!",
   "creator": "roland",
   "license": "CC0",
@@ -535,7 +535,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/35034347371@N01/31227593715"
  },
  "r56": {
-  "img": "photos/r56.jpg",
+  "img": "assets/photos/r56.jpg",
   "title": "Butter corn miso ramen of Yokohama Hakkeirou",
   "creator": "毒島みるく",
   "license": "CC0",
@@ -543,7 +543,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://commons.wikimedia.org/w/index.php?curid=94664471"
  },
  "r57": {
-  "img": "photos/r57.jpg",
+  "img": "assets/photos/r57.jpg",
   "title": "Tokyo Ramen - Ichiban Boshi, The Galleries Victoria - ramen set AUD16",
   "creator": "avlxyz",
   "license": "BY-SA",
@@ -551,7 +551,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/10559879@N00/3548097403"
  },
  "r58": {
-  "img": "photos/r58.jpg",
+  "img": "assets/photos/r58.jpg",
   "title": "tonkotsu ramen",
   "creator": "kinseikun",
   "license": "CC0",
@@ -559,7 +559,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://www.flickr.com/photos/162338887@N06/39481472514"
  },
  "r59": {
-  "img": "photos/r59.jpg",
+  "img": "assets/photos/r59.jpg",
   "title": "Santouka Shio Ramen Carry Out 2020",
   "creator": "Bonnachoven",
   "license": "CC0",
@@ -567,7 +567,7 @@ window.RECIPE_PHOTOS = {
   "src": "https://commons.wikimedia.org/w/index.php?curid=92960826"
  },
  "r60": {
-  "img": "photos/r60.jpg",
+  "img": "assets/photos/r60.jpg",
   "title": "abura soba",
   "creator": "mitsukuni",
   "license": "BY",
