@@ -1,9 +1,9 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>2026年夏休み自由研究: クッキングクエスト🔥</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:system-ui,-apple-system,"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:#0b1020;color:#eef2ff;overflow:hidden}
@@ -36,12 +36,12 @@ h1{font-size:clamp(30px,7vmin,74px);margin:.2em 0;line-height:1.05}
 <div id="s" class="hide"></div>
 <div class="bar hide" id="bar"><button onclick="go(i-1)">←</button><div class="no" id="no"></div><div class="prog"><i id="pi"></i></div><button onclick="fs()">⛶</button><button onclick="go(i+1)">→</button></div>
 
-<script src="supabase.js"></script>
-<script src="cloud-config.js"></script>
+<script src="lib/supabase.js"></script>
+<script src="js/cloud-config.js"></script>
 <script>
 const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nl=s=>esc(s).replace(/\n/g,'<br>');
-const fd=s=>{if(!s)return'';const d=new Date(s+'T00:00:00');if(isNaN(d))return s;const w=['日','月','火','水','木','金','土'][d.getDay()];return (d.getMonth()+1)+'月'+d.getDate()+'日('+w+')';};
+const fd=s=>{if(!s)return'';const[y,m,d]=s.split('-').map(Number);if(!y||!m||!d)return s;const date=new Date(y,m-1,d);if(isNaN(date))return s;const w=['日','月','火','水','木','金','土'][date.getDay()];return(date.getMonth()+1)+'月'+date.getDate()+'日('+w+')';};
 let slides=[],els=[],i=0;
 function go(n){if(!els.length)return;i=Math.max(0,Math.min(els.length-1,n));els.forEach((el,k)=>el.classList.toggle('on',k===i));document.getElementById('no').textContent=(i+1)+' / '+els.length;document.getElementById('pi').style.width=((i+1)/els.length*100)+'%';}
 function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
@@ -49,11 +49,11 @@ function build(S,E){
   slides=[];
   slides.push('<div class="sl cover"><div class="plate">🍽️</div><div class="k">じゆうけんきゅう / COOKING QUEST</div><h1>'+esc(S.title||'')+'</h1><div class="m" style="justify-content:center"><div class="b"><b>なまえ</b> '+esc(S.name||'')+'</div><div class="b"><b>クラス</b> '+esc(S.grade||'')+'</div><div class="b"><b>クリア</b> '+E.length+'日</div></div></div>');
   if(S.intro&&S.intro.trim())slides.push('<div class="sl"><div class="k">はじめに</div><h1>なぜ やろうと思ったか 💡</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.intro)+'</div></div></div>');
-  E.forEach(e=>{const p=(e.photos||[]).slice(0,4);let g='1fr';if(p.length===2)g='1fr 1fr';if(p.length===3)g='2fr 1fr';if(p.length>=4)g='1fr 1fr';
+  E.forEach((e,idx)=>{const dayNum=idx+1;const p=(e.photos||[]).slice(0,4);let g='1fr';if(p.length===2)g='1fr 1fr';if(p.length===3)g='2fr 1fr';if(p.length>=4)g='1fr 1fr';
    const shot=x=>'<div class="shot"><span style="background-image:url(\''+esc(x)+'\')"></span><img src="'+esc(x)+'"></div>';
    const ph=p.length?'<div class="ph" style="grid-template-columns:'+g+'">'+p.map(shot).join('')+'</div>':'<div class="ph" style="place-items:center;font-size:12vmin">🍽️</div>';
    const st='⭐'.repeat(e.stars||0);
-   slides.push('<div class="sl"><div class="k">'+e.day+'日目 ・ '+esc(fd(e.date))+'</div><h1>'+esc(e.title||'')+'</h1>'+ph+'<div class="m">'+(e.ingredients?'<div class="b"><b>材料</b> '+esc((e.ingredients||'').split("\n").filter(Boolean).join("、"))+'</div>':'')+(e.yum?'<div class="b">'+esc(e.yum)+'</div>':'')+(st?'<div class="b">'+st+'</div>':'')+(e.note?'<div class="b"><b>ひとこと</b> '+esc(e.note)+'</div>':'')+'</div></div>');});
+   slides.push('<div class="sl"><div class="k">'+dayNum+'日目 ・ '+esc(fd(e.date))+'</div><h1>'+esc(e.title||'')+'</h1>'+ph+'<div class="m">'+(e.ingredients?'<div class="b"><b>材料</b> '+esc((e.ingredients||'').split("\n").filter(Boolean).join("、"))+'</div>':'')+(e.yum?'<div class="b">'+esc(e.yum)+'</div>':'')+(st?'<div class="b">'+st+'</div>':'')+(e.note?'<div class="b"><b>ひとこと</b> '+esc(e.note)+'</div>':'')+'</div></div>');});
   if(S.summary&&S.summary.trim())slides.push('<div class="sl"><div class="k">まとめ</div><h1>やってみて わかったこと 🏁</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.summary)+'</div></div></div>');
   slides.push('<div class="sl cover"><div class="plate">🎉</div><h1>おわり</h1><div class="k">みてくれて ありがとう！</div></div>');
   document.getElementById('s').innerHTML=slides.join('');

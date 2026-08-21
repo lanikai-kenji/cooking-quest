@@ -25,9 +25,12 @@ window.Cloud = (function(){
     }catch(e){}
   }
   function resolveWs(){
+    // URLハッシュに ws= があればそれを使う（localStorageは更新しない）
     const m = (location.hash||'').match(/ws=([A-Za-z0-9\-]+)/);
-    if(m){ ws=m[1]; try{localStorage.setItem('cq_ws',ws);}catch(e){} return; }
+    if(m){ ws=m[1]; return; }
+    // URLになければlocalStorageから読む
     try{ const s=localStorage.getItem('cq_ws'); if(s){ ws=s; setHash(); return; } }catch(e){}
+    // どちらもなければ新規生成してlocalStorageに保存
     ws = genWs(); try{localStorage.setItem('cq_ws',ws);}catch(e){}
     setHash();
   }
