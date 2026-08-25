@@ -1132,7 +1132,7 @@ const D=__DATA__;
 const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nl=s=>esc(s).replace(/\\n/g,'<br>');
 const fd=s=>{if(!s)return'';const[y,m,d]=s.split('-').map(Number);if(!y||!m||!d)return s;const date=new Date(y,m-1,d);if(isNaN(date))return s;const w=['日','月','火','水','木','金','土'][date.getDay()];return(date.getMonth()+1)+'月'+date.getDate()+'日('+w+')';};
-const S=D.settings,E=D.entries.slice().sort((a,b)=>a.day-b.day);
+const S=D.settings,E=D.entries.slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.createdAt||0)-(b.createdAt||0));
 let slides=[];
 slides.push('<div class="sl cover"><div class="plate">🍽️</div><div class="k">じゆうけんきゅう / COOKING QUEST</div><h1>'+esc(S.title||'')+'</h1><div class="m" style="justify-content:center"><div class="b"><b>なまえ</b> '+esc(S.name||'')+'</div><div class="b"><b>クラス</b> '+esc(S.grade||'')+'</div><div class="b"><b>クリア</b> '+E.length+'日</div></div></div>');
 if(S.intro&&S.intro.trim())slides.push('<div class="sl"><div class="k">はじめに</div><h1>なぜ やろうと思ったか 💡</h1><div class="m"><div class="b" style="font-size:clamp(18px,3.4vmin,34px);line-height:1.6">'+nl(S.intro)+'</div></div></div>');

@@ -74,9 +74,8 @@ async function load(){
     const st=await c.from('app_settings').select('data').eq('ws',ws).maybeSingle();
     const en=await c.from('entries').select('*').eq('ws',ws).order('day',{ascending:true});
     const S=(st.data&&st.data.data)||{};
-    // 同じ日の重複は新しい方だけ表示
-    const byDay={};(en.data||[]).forEach(r=>{const p=byDay[r.day];if(!p||(r.created_at||0)>=(p.created_at||0))byDay[r.day]=r;});
-    const E=Object.values(byDay).sort((a,b)=>a.day-b.day).map(r=>({day:r.day,date:r.date,title:r.title,ingredients:r.ingredients,note:r.note,stars:r.stars,yum:r.yum,photos:r.photos||[]}));
+    // アプリ(js/app.js)と同じ：日付順で全件表示（通し番号で番号付け）
+    const E=(en.data||[]).slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.created_at||0)-(b.created_at||0)).map(r=>({day:r.day,date:r.date,title:r.title,ingredients:r.ingredients,note:r.note,stars:r.stars,yum:r.yum,photos:r.photos||[]}));
     if(!E.length){showMsg('まだ発表データがありません','記録ページで料理を記録すると、ここに出ます🍳');return;}
     document.title=(S.title||'クッキングクエスト');
     build(S,E);
