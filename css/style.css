@@ -970,6 +970,9 @@ textarea {
   position: relative;
   box-shadow: 0 8px 30px rgba(0, 0, 0, .5);
   overflow: hidden;
+  /* 背景色・半透明パネルもPDF/印刷で出す */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 .paper .pad {
@@ -1005,70 +1008,73 @@ textarea {
   line-height: 1.15;
 }
 
-.paper .p-photos {
-  display: grid;
-  gap: 4mm;
+/* ===== 1日ページ：写真ヒーロー + すりガラス風キャプション（iPad発表向け） ===== */
+.paper.day { color: #fff; }
+.paper.day .p-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0;
 }
-
-.paper .p-photos img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: #f5f5f5;
-  border-radius: 3mm;
-  border: 1px solid #eee;
+.paper.day .p-bg-none {
+  display: grid; place-items: center; font-size: 60mm;
+  background: linear-gradient(135deg, #2a3350, #171b2b);
 }
-
-.paper .p-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5mm;
-  margin-top: 4mm;
+/* 上：タイトル用にうっすら暗く／下：文字パネル用に濃く暗く */
+.paper.day .p-shade {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(0,0,0,.55) 0%, rgba(0,0,0,.10) 20%, rgba(0,0,0,.06) 42%, rgba(0,0,0,.72) 100%);
 }
-
-.paper .p-block {
-  background: #fff7ef;
-  border: 1.5px solid #ffd7b8;
-  border-radius: 3mm;
-  padding: 3mm 4mm;
+.paper.day .pad {
+  position: relative; z-index: 2;
+  padding: 10mm 11mm; height: 100%;
+  display: flex; flex-direction: column;
 }
-
-.paper .p-block h4 {
-  margin: 0 0 1.5mm;
-  color: #e2560f;
-  font-size: 4mm;
-  display: flex;
-  align-items: center;
-  gap: 1.5mm;
+.paper.day .p-top { display: flex; flex-direction: column; gap: 1mm; }
+.paper.day .p-head { display: flex; gap: 3mm; align-items: center; }
+.paper.day .p-head .dnum {
+  background: linear-gradient(135deg, #ff6a2b, #ff2e63); color: #fff;
+  font-weight: 900; font-size: 5mm; padding: 1.4mm 4mm; border-radius: 20mm;
+  box-shadow: 0 2mm 5mm rgba(255,46,99,.4);
 }
-
-.paper .p-block .txt {
-  white-space: pre-wrap;
-  line-height: 1.6;
-  font-size: 3.6mm;
+.paper.day .p-head .pdate {
+  background: rgba(0,0,0,.5); color: #fff; font-weight: 800; font-size: 3.8mm;
+  padding: 1.4mm 3.5mm; border-radius: 20mm;
 }
-
-.paper .p-block ul {
-  margin: 0;
-  padding-left: 5mm;
-  line-height: 1.7;
-  font-size: 3.6mm;
+.paper.day .p-title {
+  margin: 2mm 0 0; font-size: 9mm; line-height: 1.12; font-weight: 900; color: #fff;
+  text-shadow: 0 1.5mm 4mm rgba(0,0,0,.7), 0 0 1mm rgba(0,0,0,.6);
 }
-
-.paper .p-foot {
+.paper.day .p-thumbs { display: flex; gap: 2.5mm; margin-top: 3.5mm; }
+.paper.day .p-thumbs img {
+  width: 30mm; height: 22mm; object-fit: cover; border-radius: 2.5mm;
+  border: 0.8mm solid rgba(255,255,255,.9); box-shadow: 0 2mm 6mm rgba(0,0,0,.55);
+}
+/* 半透明パネル（文字は白＋高コントラスト） */
+.paper.day .p-panel {
   margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  color: #999;
-  font-size: 3mm;
-  border-top: 1px solid #eee;
-  padding-top: 2mm;
+  background: rgba(10,14,26,.66);
+  border: 0.4mm solid rgba(255,255,255,.22);
+  border-radius: 5mm; padding: 5mm 5.5mm;
+  box-shadow: 0 5mm 18mm rgba(0,0,0,.5);
 }
-
-.paper .stars-print {
-  color: #ff8f1f;
-  letter-spacing: 1px;
+.paper.day .p-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+.paper.day .p-block.full { margin-top: 4mm; }
+.paper.day .p-block h4 {
+  margin: 0 0 2mm; color: #ffd27a; font-size: 4.2mm; font-weight: 900;
+  display: flex; align-items: center; gap: 1.5mm;
 }
+.paper.day .p-block .txt {
+  white-space: pre-wrap; line-height: 1.6; font-size: 3.8mm; color: #f3f5fb;
+}
+.paper.day .p-block ul {
+  margin: 0; padding-left: 5mm; line-height: 1.7; font-size: 3.8mm; color: #f3f5fb;
+}
+.paper.day .p-foot {
+  margin-top: 4mm; padding-top: 3mm;
+  border-top: 0.4mm solid rgba(255,255,255,.2);
+  display: flex; justify-content: space-between; font-size: 3.4mm; color: #e6ebf5;
+}
+.paper.day .stars-print { color: #ffca4a; letter-spacing: .4mm; font-weight: 800; }
 
 /* 表紙 */
 .paper.cover .pad {

@@ -591,37 +591,43 @@ function makeQR(text){
 
 function dayPageHTML(e, dim, dayNum){
   const photos=e.photos||[];
-  let grid='1fr', rows='1fr';
-  const n=Math.min(photos.length,4);
-  if(n===2){grid='1fr 1fr';} if(n===3){grid='1fr 1fr';rows='1fr 1fr';} if(n>=4){grid='1fr 1fr';rows='1fr 1fr';}
-  const ph = n
-    ? `<div class="p-photos" style="grid-template-columns:${grid};grid-auto-rows:1fr;flex:1;min-height:0">
-        ${photos.slice(0,4).map((p,i)=>`<img src="${esc(p)}" ${n===3&&i===0?'style="grid-row:span 2"':''}>`).join('')}
-       </div>`
-    : `<div class="p-photos" style="flex:1;place-items:center;display:grid;font-size:30mm">🍽️</div>`;
+  const bg=photos[0];
+  const extra=photos.slice(1,4);
   const ings=(e.ingredients||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  const bgLayer = bg
+    ? `<img class="p-bg" src="${esc(bg)}" alt="">`
+    : `<div class="p-bg p-bg-none">🍽️</div>`;
+  const thumbs = extra.length
+    ? `<div class="p-thumbs">${extra.map(u=>`<img src="${esc(u)}" alt="">`).join('')}</div>`
+    : '';
   return `
+   ${bgLayer}
+   <div class="p-shade"></div>
    <div class="pad">
-     <div class="p-head"><div class="dnum">${dayNum}日目</div><div class="pdate">${esc(fmtDate(e.date))}</div></div>
-     <h3 class="p-title">${esc(e.title||'（タイトルなし）')}</h3>
-     ${ph}
-     <div class="p-body">
-       <div class="p-block">
-         <h4>🧂 使った材料</h4>
-         ${ings.length?`<ul>${ings.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:`<div class="txt muted">—</div>`}
+     <div class="p-top">
+       <div class="p-head"><span class="dnum">${dayNum}日目</span><span class="pdate">${esc(fmtDate(e.date))}</span></div>
+       <h3 class="p-title">${esc(e.title||'（タイトルなし）')}</h3>
+       ${thumbs}
+     </div>
+     <div class="p-panel">
+       <div class="p-cols">
+         <div class="p-block">
+           <h4>🧂 使った材料</h4>
+           ${ings.length?`<ul>${ings.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:`<div class="txt">—</div>`}
+         </div>
+         <div class="p-block">
+           <h4>👨‍🍳 作りかた・くふう</h4>
+           <div class="txt">${esc(e.steps||'—')}</div>
+         </div>
        </div>
-       <div class="p-block">
-         <h4>👨‍🍳 作りかた・くふう</h4>
-         <div class="txt">${esc(e.steps||'—')}</div>
-       </div>
-       <div class="p-block" style="grid-column:1/-1">
+       <div class="p-block full">
          <h4>💬 かんそう</h4>
          <div class="txt">${esc(e.note||'—')}</div>
        </div>
-     </div>
-     <div class="p-foot">
-       <span class="stars-print">できばえ ${starStr(e.stars)}　${esc(e.yum||'')}</span>
-       <span>${esc(state.settings.name||'')}</span>
+       <div class="p-foot">
+         <span class="stars-print">できばえ ${starStr(e.stars)}　${esc(e.yum||'')}</span>
+         <span>${esc(state.settings.name||'')}</span>
+       </div>
      </div>
    </div>`;
 }
@@ -694,7 +700,7 @@ function renderReport(){
       </div></div>`;
     }
   }else{
-    entries.forEach((e, idx)=>{ html+=`<div class="paper" style="${paperStyle}">${dayPageHTML(e, null, idx+1)}</div>`; });
+    entries.forEach((e, idx)=>{ html+=`<div class="paper day" style="${paperStyle}">${dayPageHTML(e, null, idx+1)}</div>`; });
   }
 
   if(withDocs && s.summary && s.summary.trim()){
